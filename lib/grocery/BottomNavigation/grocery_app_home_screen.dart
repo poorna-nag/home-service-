@@ -819,11 +819,10 @@ class GroceryAppHomeScreenState extends State<GroceryAppHomeScreen>
                             ),
                           ],
                         ),
-                        child: Image.asset(
-                          'assets/images/logo.png',
-                          width: 14,
-                          height: 14,
-                          fit: BoxFit.contain,
+                        child: Icon(
+                          Icons.location_on_rounded,
+                          size: 14,
+                          color: GroceryAppColors.tela,
                         ),
                       ),
                       SizedBox(width: 6),

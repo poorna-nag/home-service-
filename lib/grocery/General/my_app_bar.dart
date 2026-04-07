@@ -43,10 +43,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
-                'assets/images/logo.png',
+                'assets/icon/Home services 1.png',
                 height: 24,
                 width: 24,
-                color: Colors.white,
+                fit: BoxFit.contain,
               ),
             ),
             SizedBox(width: 10),

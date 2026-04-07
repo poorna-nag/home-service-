@@ -28,22 +28,16 @@ class GroceryAppState extends State<GroceryApp> {
 
   void getcartCount() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    int? cCount = pref.getInt("cc");
+    final int cCount = pref.getInt("itemCount") ?? 0;
     setState(() {
-      //log("cart get count------------------->>$cCount");
-      if (cCount != null) {
-        if (cCount == 0 || cCount < 0) {
-          cc = 0;
-          AppConstent.cc = 0;
-          //log(" AppConstent.cc------------------->>${AppConstent.cc}");
-        } else {
-          setState(() {
-            cc = cCount;
-            AppConstent.cc = cCount;
-          });
-        }
+      if (cCount <= 0) {
+        cc = 0;
+        AppConstent.cc = 0;
+      } else {
+        cc = cCount;
+        AppConstent.cc = cCount;
       }
-      //log("cart count------------------->>$cc");
+      GroceryAppConstant.groceryAppCartItemCount = cc;
     });
   }
 
@@ -76,11 +70,14 @@ class GroceryAppState extends State<GroceryApp> {
       } else {
         GroceryAppConstant.isLogin = false;
       }
-      if (Count == null) {
+      if (Count == null || Count <= 0) {
         GroceryAppConstant.groceryAppCartItemCount = 0;
+        countval = 0;
+        cc = 0;
       } else {
         GroceryAppConstant.groceryAppCartItemCount = Count;
         countval = Count;
+        cc = Count;
       }
 //      print(Constant.carditemCount.toString()+"itemCount");
     });
@@ -501,7 +498,7 @@ class GroceryAppState extends State<GroceryApp> {
                             : Colors.grey[600],
                         size: 24,
                       ),
-                      if (cc > 0)
+                      if (GroceryAppConstant.groceryAppCartItemCount > 0)
                         Positioned(
                           right: 0,
                           top: 0,
@@ -516,7 +513,7 @@ class GroceryAppState extends State<GroceryApp> {
                               minHeight: 16,
                             ),
                             child: Text(
-                              '$cc',
+                              '${GroceryAppConstant.groceryAppCartItemCount}',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,

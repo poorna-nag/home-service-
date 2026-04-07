@@ -570,19 +570,19 @@ class _SignInScreenState extends State<SignInScreen>
                                 ),
                                 padding: EdgeInsets.all(12),
                                 child: Image.asset(
-                                  'assets/images/logo.png',
+                                  'assets/icon/Home services 1.png',
                                   fit: BoxFit.contain,
                                 ),
                               ),
                               SizedBox(height: 10),
                               // Brand name
                               Text(
-                                "HOME SERVICE",
+                                GroceryAppConstant.appname,
                                 style: TextStyle(
-                                  fontSize: 22,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
-                                  letterSpacing: 1.2,
+                                  letterSpacing: 0.8,
                                   shadows: [
                                     Shadow(
                                       color: Colors.black.withOpacity(0.2),

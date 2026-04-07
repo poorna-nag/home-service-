@@ -543,20 +543,6 @@ class _AppDrawerState extends State<AppDrawer> {
                     },
                   ),
                   _buildModernListTile(
-                    icon: Icons.local_shipping_rounded,
-                    title: 'Shipping Policy',
-                    color: GroceryAppColors.tela,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WebViewClass(
-                                  "Shipping Policy",
-                                  "https://EcoShine24.w4u.in/cr")));
-                    },
-                  ),
-                  _buildModernListTile(
                     icon: Icons.info_rounded,
                     title: 'About Us',
                     color: GroceryAppColors.tela1,
@@ -663,7 +649,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       ],
                     ),
                     child: Image.asset(
-                      'assets/images/logo.png',
+                      'assets/icon/Home services 1.png',
                       fit: BoxFit.contain,
                     ),
                   ),

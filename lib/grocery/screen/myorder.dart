@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:EcoShine24/grocery/Auth/signin.dart';
 import 'package:EcoShine24/grocery/dbhelper/database_helper.dart';
 import 'package:EcoShine24/grocery/model/TrackInvoiceModel.dart';
 import 'package:EcoShine24/grocery/screen/Finaltracking.dart';
@@ -15,11 +16,16 @@ class TrackOrder extends StatefulWidget {
 
 class _TrackOrderState extends State<TrackOrder> {
   String? mobile;
+  bool isLoggedIn = false;
+
   Future<void> getUserInfo() async {
     SharedPreferences pre = await SharedPreferences.getInstance();
     String? mob = pre.getString("mobile");
+    bool? login = pre.getBool("isLogin");
     this.setState(() {
       mobile = mob;
+      isLoggedIn = login ?? false;
+      GroceryAppConstant.isLogin = isLoggedIn;
     });
   }
 
@@ -33,6 +39,7 @@ class _TrackOrderState extends State<TrackOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: GroceryAppColors.tela1, // Blue background
       body: Container(
         decoration: BoxDecoration(
@@ -108,63 +115,163 @@ class _TrackOrderState extends State<TrackOrder> {
               Expanded(
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: FutureBuilder(
-                    future: trackInvoice(mobile ?? ""),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container(
-                          margin: EdgeInsets.only(top: 20),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      GroceryAppColors.white),
-                                  strokeWidth: 3,
-                                ),
-                                SizedBox(height: 20),
-                                Text(
-                                  "Loading your bookings...",
-                                  style: TextStyle(
-                                    color:
-                                        GroceryAppColors.white.withOpacity(0.8),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                  child: !isLoggedIn
+                      ? _buildLoginRequiredState()
+                      : FutureBuilder(
+                          future: trackInvoice(mobile ?? ""),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(
+                                margin: EdgeInsets.only(top: 20),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                GroceryAppColors.white),
+                                        strokeWidth: 3,
+                                      ),
+                                      SizedBox(height: 20),
+                                      Text(
+                                        "Loading your bookings...",
+                                        style: TextStyle(
+                                          color: GroceryAppColors.white
+                                              .withOpacity(0.8),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
+                              );
+                            }
 
-                      if (snapshot.hasData) {
-                        if (snapshot.data!.isEmpty) {
-                          return _buildEmptyState();
-                        }
+                            if (snapshot.hasData) {
+                              if (snapshot.data!.isEmpty) {
+                                return _buildEmptyState();
+                              }
 
-                        return Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: ListView.builder(
-                            padding: EdgeInsets.all(16),
-                            itemCount: snapshot.data?.length ?? 0,
-                            itemBuilder: (BuildContext context, int index) {
-                              TrackInvoice item = snapshot.data![index];
-                              return _buildModernBookingCard(
-                                  context, item, index);
-                            },
-                          ),
-                        );
-                      } else {
-                        return _buildEmptyState();
-                      }
-                    },
-                  ),
+                              return Container(
+                                margin: EdgeInsets.only(top: 10),
+                                child: ListView.builder(
+                                  padding: EdgeInsets.all(16),
+                                  itemCount: snapshot.data?.length ?? 0,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    TrackInvoice item = snapshot.data![index];
+                                    return _buildModernBookingCard(
+                                        context, item, index);
+                                  },
+                                ),
+                              );
+                            } else {
+                              return _buildEmptyState();
+                            }
+                          },
+                        ),
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginRequiredState() {
+    return Container(
+      margin: EdgeInsets.only(top: 50),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: GroceryAppColors.white.withOpacity(0.1),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: GroceryAppColors.white.withOpacity(0.2),
+                  width: 2,
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: Image.asset(
+                  'assets/icon/Home services 1.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            SizedBox(height: 24),
+            Text(
+              "Login First",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: GroceryAppColors.white,
+              ),
+            ),
+            SizedBox(height: 12),
+            Text(
+              "Please sign in to view your bookings and service history.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: GroceryAppColors.white.withOpacity(0.8),
+                height: 1.5,
+              ),
+            ),
+            SizedBox(height: 32),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    GroceryAppColors.white,
+                    GroceryAppColors.white.withOpacity(0.9),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignInPage()),
+                  ).then((_) => getUserInfo());
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
+                child: Text(
+                  "Login to Continue",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: GroceryAppColors.tela,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -370,7 +477,7 @@ class _TrackOrderState extends State<TrackOrder> {
                     Expanded(
                       child: _buildInfoTile(
                         icon: Icons.location_on,
-                        label: "Delivery To",
+                        label: "Service At",
                         value: "${item.city ?? "N/A"}",
                         color: GroceryAppColors.tela, // Blue theme
                       ),
@@ -533,8 +640,7 @@ class _TrackOrderState extends State<TrackOrder> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      TrackOrder(),
+                                  builder: (context) => TrackOrder(),
                                 ),
                               );
                             },

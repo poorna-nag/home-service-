@@ -114,6 +114,40 @@ class _HomePageState extends State<AddAddress> {
     }
   }
 
+  Widget _buildAddressTypeOption(String label, int value) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: () => setSelectRadio(value),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Radio<int>(
+              value: value,
+              groupValue: selectedRadio,
+              onChanged: (val) {
+                if (val != null) {
+                  setSelectRadio(val);
+                }
+              },
+              activeColor: Color(0xFF1B5E20),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.compact,
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,65 +246,13 @@ class _HomePageState extends State<AddAddress> {
                                   ),
                                 ),
                                 SizedBox(height: 8),
-                                Row(
+                                Wrap(
+                                  spacing: 12,
+                                  runSpacing: 8,
                                   children: [
-                                    Expanded(
-                                      child: RadioListTile(
-                                        contentPadding: EdgeInsets.zero,
-                                        value: 1,
-                                        groupValue: selectedRadio,
-                                        title: Text(
-                                          "Home",
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                        onChanged: (val) {
-                                          print("Radio $val");
-                                          setSelectRadio(val!);
-                                        },
-                                        activeColor: Color(0xFF1B5E20),
-                                        dense: true,
-                                        visualDensity: VisualDensity(
-                                            horizontal: -4, vertical: -4),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: RadioListTile(
-                                        contentPadding: EdgeInsets.zero,
-                                        value: 2,
-                                        groupValue: selectedRadio,
-                                        title: Text(
-                                          "Office",
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                        onChanged: (val) {
-                                          print("Radio $val");
-                                          setSelectRadio(val!);
-                                        },
-                                        activeColor: Color(0xFF1B5E20),
-                                        dense: true,
-                                        visualDensity: VisualDensity(
-                                            horizontal: -4, vertical: -4),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: RadioListTile(
-                                        contentPadding: EdgeInsets.zero,
-                                        value: 3,
-                                        groupValue: selectedRadio,
-                                        title: Text(
-                                          "Others",
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                        onChanged: (val) {
-                                          print("Radio $val");
-                                          setSelectRadio(val!);
-                                        },
-                                        activeColor: Color(0xFF1B5E20),
-                                        dense: true,
-                                        visualDensity: VisualDensity(
-                                            horizontal: -4, vertical: -4),
-                                      ),
-                                    ),
+                                    _buildAddressTypeOption("Home", 1),
+                                    _buildAddressTypeOption("Office", 2),
+                                    _buildAddressTypeOption("Others", 3),
                                   ],
                                 ),
                               ],

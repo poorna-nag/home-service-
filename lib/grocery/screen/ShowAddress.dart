@@ -23,6 +23,7 @@ class ShowAddress extends StatefulWidget {
 class _ShowAddressState extends State<ShowAddress> {
   List<UserAddress> add = [];
   bool isloading = false;
+  String? selectedAddressId;
 //  void checkAddress(){
 //    if(widget.valu=="0"&& add.length>0){
 //      Navigator.push(context,
@@ -35,11 +36,49 @@ class _ShowAddressState extends State<ShowAddress> {
   void initState() {
     super.initState();
     isloading = true;
+    _loadSelectedAddressId();
     getAddress().then((usersFromServe) {
       setState(() {
         add = usersFromServe!;
         isloading = false;
       });
+    });
+  }
+
+  Future<void> _loadSelectedAddressId() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    if (!mounted) return;
+    setState(() {
+      selectedAddressId = pref.getString("selected_address_id");
+    });
+  }
+
+  Future<void> _selectAddress(UserAddress selected) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    final String addressText = [
+      selected.address1,
+      selected.address2,
+      selected.city,
+      selected.state,
+      selected.pincode,
+    ].where((part) => part != null && part!.trim().isNotEmpty).join(", ");
+
+    await pref.setString("selected_address_id", selected.addId ?? "");
+    await pref.setString("address", selected.address1 ?? "");
+    await pref.setString("add", addressText);
+
+    if (selected.lat != null && selected.lat!.isNotEmpty) {
+      await pref.setString("lat", selected.lat!);
+      GroceryAppConstant.latitude = double.tryParse(selected.lat!) ?? 0.0;
+    }
+    if (selected.lng != null && selected.lng!.isNotEmpty) {
+      await pref.setString("lng", selected.lng!);
+      GroceryAppConstant.longitude = double.tryParse(selected.lng!) ?? 0.0;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      selectedAddressId = selected.addId;
     });
   }
 
@@ -144,7 +183,17 @@ class _ShowAddressState extends State<ShowAddress> {
                                       builder: (context) => UpDateAddress(
                                           add[index], widget.valu)),
                                 );
-                              } else {}
+                              } else {
+                                _selectAddress(add[index]).then((_) {
+                                  if (!mounted) return;
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GroceryApp()),
+                                    (route) => false,
+                                  );
+                                });
+                              }
                             },
                             child: Container(
                               margin:
@@ -179,6 +228,40 @@ class _ShowAddressState extends State<ShowAddress> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
+                                      if (selectedAddressId == add[index].addId)
+                                        Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 8),
+                                          decoration: BoxDecoration(
+                                            color: GroceryAppColors.boxColor1
+                                                .withOpacity(0.08),
+                                            borderRadius:
+                                                BorderRadius.vertical(
+                                              top: Radius.circular(16),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.check_circle_rounded,
+                                                color:
+                                                    GroceryAppColors.boxColor1,
+                                                size: 18,
+                                              ),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                "Selected for Home Screen",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: GroceryAppColors
+                                                      .boxColor1,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       add[index].label != null
                                           ? Padding(
                                               padding: EdgeInsets.only(
@@ -418,37 +501,36 @@ class _ShowAddressState extends State<ShowAddress> {
                                                     ),
                                                   ),
                                                   onPressed: () {
-                                                    // Prefer lat/lng from the selected address when available
                                                     final selected = add[index];
-                                                    final selectedLat =
-                                                        double.tryParse(
-                                                            selected.lat ?? '');
-                                                    final selectedLng =
-                                                        double.tryParse(
-                                                            selected.lng ?? '');
-
-                                                    if (selectedLat != null &&
-                                                        selectedLng != null) {
-                                                      GroceryAppConstant
-                                                              .latitude =
-                                                          selectedLat;
-                                                      GroceryAppConstant
-                                                              .longitude =
-                                                          selectedLng;
-                                                    }
-
-                                                    // Always proceed to checkout with the selected address
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            CheckOutPage(
-                                                                selected),
-                                                      ),
-                                                    );
+                                                    _selectAddress(selected)
+                                                        .then((_) {
+                                                      if (!mounted) return;
+                                                      if (widget.valu == "0") {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CheckOutPage(
+                                                                    selected),
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        Navigator
+                                                            .pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                GroceryApp(),
+                                                          ),
+                                                          (route) => false,
+                                                        );
+                                                      }
+                                                    });
                                                   },
                                                   child: Text(
-                                                    'Continue >>',
+                                                    widget.valu == "0"
+                                                        ? 'Continue >>'
+                                                        : 'Select Address',
                                                     style: TextStyle(
                                                         color: Colors.white),
                                                   ),

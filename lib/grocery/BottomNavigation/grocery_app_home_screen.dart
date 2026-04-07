@@ -186,6 +186,26 @@ class GroceryAppHomeScreenState extends State<GroceryAppHomeScreen>
 
   final addController = TextEditingController();
 
+  Future<void> _loadSavedSelectedAddress() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    final String? savedAddress = pref.getString("add");
+    final String? savedLat = pref.getString("lat");
+    final String? savedLng = pref.getString("lng");
+
+    if (!mounted) return;
+    setState(() {
+      if (savedAddress != null && savedAddress.trim().isNotEmpty) {
+        addController.text = savedAddress;
+      }
+      if (savedLat != null && savedLat.isNotEmpty) {
+        GroceryAppConstant.latitude = double.tryParse(savedLat) ?? 0.0;
+      }
+      if (savedLng != null && savedLng.isNotEmpty) {
+        GroceryAppConstant.longitude = double.tryParse(savedLng) ?? 0.0;
+      }
+    });
+  }
+
   Position? position;
 
   getAddress(double lat, double long) async {
@@ -205,6 +225,9 @@ class GroceryAppHomeScreenState extends State<GroceryAppHomeScreen>
   }
 
   void _getCurrentLocation() async {
+    if (addController.text.isNotEmpty) {
+      return;
+    }
     Position res = await Geolocator.getCurrentPosition();
     setState(() {
       position = res;
@@ -419,6 +442,7 @@ class GroceryAppHomeScreenState extends State<GroceryAppHomeScreen>
       ),
     );
 
+    _loadSavedSelectedAddress();
     _getCurrentLocation();
     _loadSavedCategoryOnInit(); // Load saved category and initialize
 

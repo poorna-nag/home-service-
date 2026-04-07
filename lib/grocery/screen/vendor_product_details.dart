@@ -144,22 +144,42 @@ class VendorProductDetailsState extends State<VendorProductDetails> {
   final DbProductManager dbmanager = DbProductManager();
   final DbProductManager1 dbmanager1 = DbProductManager1();
 
+  List<String> _splitCsv(String? value) {
+    if (value == null || value.trim().isEmpty) return [];
+    return value
+        .split(',')
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList();
+  }
+
+  Future<void> _syncCartCount() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    final List<ProductsCart> cartItems = await dbmanager.getProductList();
+    final int actualCount = cartItems.length;
+
+    if (!mounted) return;
+    setState(() {
+      cc = actualCount;
+      AppConstent.cc = actualCount;
+      GroceryAppConstant.groceryAppCartItemCount = actualCount;
+    });
+
+    await pref.setInt("cc", actualCount);
+    await pref.setInt("itemCount", actualCount);
+  }
+
 //  DatabaseHelper helper = DatabaseHelper();
 //  Note note ;
 
   void gatinfoCount() async {
+    await _syncCartCount();
     SharedPreferences pref = await SharedPreferences.getInstance();
     GroceryAppConstant.isLogin = false;
-    int? Count = pref.getInt("itemCount");
     bool? ligin = pref.getBool("isLogin");
     setState(() {
       if (ligin != null) {
         GroceryAppConstant.isLogin = ligin;
-      }
-      if (Count == null) {
-        GroceryAppConstant.groceryAppCartItemCount = 0;
-      } else {
-        GroceryAppConstant.groceryAppCartItemCount = Count;
       }
       print(
           GroceryAppConstant.groceryAppCartItemCount.toString() + "itemCount");
@@ -167,24 +187,7 @@ class VendorProductDetailsState extends State<VendorProductDetails> {
   }
 
   void getcartCount() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    int? cCount = pref.getInt("cc");
-    setState(() {
-      //log("cart get count------------------->>$cCount");
-      if (cCount != null) {
-        if (cCount == 0 || cCount < 0) {
-          cc = 0;
-          AppConstent.cc = 0;
-          //log(" AppConstent.cc------------------->>${AppConstent.cc}");
-        } else {
-          setState(() {
-            cc = cCount;
-            AppConstent.cc = cCount;
-          });
-        }
-      }
-      //log("cart count------------------->>$cc");
-    });
+    await _syncCartCount();
   }
 
   static List<WishlistsCart>? prodctlist1;
@@ -218,9 +221,9 @@ class VendorProductDetailsState extends State<VendorProductDetails> {
       });
     });
 
-    catid = widget.plist.productLine!.split(',');
-    size = widget.plist.productScale!.split(',');
-    color = widget.plist.productColor!.split(',');
+    catid = _splitCsv(widget.plist.productLine);
+    size = _splitCsv(widget.plist.productScale);
+    color = _splitCsv(widget.plist.productColor);
 
     DatabaseHelper.getImage(widget.plist.productIs ?? "")
         .then((usersFromServe) {
@@ -235,12 +238,13 @@ class VendorProductDetailsState extends State<VendorProductDetails> {
 
     GroupPro(widget.plist.productIs ?? "").then((usersFromServe) {
       if (this.mounted) {
-        setState(() {
-          group = usersFromServe!;
-          print(group != null);
-          groupname = group[0].name;
-          print(group.toString() + "group info");
-        });
+        if (usersFromServe != null && usersFromServe.isNotEmpty) {
+          setState(() {
+            group = usersFromServe;
+            groupname = group.first.name ?? "";
+            print(group.toString() + "group info");
+          });
+        }
       }
     });
     getTServicebymv_id(widget.mvId, "", "").then((usersFromServe) {
@@ -250,7 +254,7 @@ class VendorProductDetailsState extends State<VendorProductDetails> {
     });
 
     setState(() {
-      actualprice = int.parse(widget.plist.buyPrice ?? "");
+      actualprice = int.tryParse(widget.plist.buyPrice ?? "") ?? 0;
       total = actualprice;
       url = widget.plist.img ?? "";
       String mrp_price =

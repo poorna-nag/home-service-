@@ -153,41 +153,49 @@ class ProductDetailsState extends State<ProductDetails> {
   final DbProductManager dbmanager = DbProductManager();
   final DbProductManager1 dbmanager1 = DbProductManager1();
   int cc = 0;
+
+  List<String> _splitCsv(String? value) {
+    if (value == null || value.trim().isEmpty) return [];
+    return value
+        .split(',')
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList();
+  }
+
+  bool get _hasColorOptions => color != null && color!.length > 1;
+  bool get _hasSizeOptions => size != null && size!.length > 1;
+
+  Future<void> _syncCartCount() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    final List<ProductsCart> cartItems = await dbmanager.getProductList();
+    final int actualCount = cartItems.length;
+
+    if (!mounted) return;
+    setState(() {
+      cc = actualCount;
+      AppConstent.cc = actualCount;
+      GroceryAppConstant.groceryAppCartItemCount = actualCount;
+    });
+
+    await pref.setInt("cc", actualCount);
+    await pref.setInt("itemCount", actualCount);
+  }
 //  DatabaseHelper helper = DatabaseHelper();
 //  Note note ;
 
   void getcartCount() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    int? cCount = pref.getInt("cc");
-    setState(() {
-      //log("cart get count------------------->>$cCount");
-      if (cCount != null) {
-        if (cCount == 0 || cCount < 0) {
-          cc = 0;
-        } else {
-          setState(() {
-            cc = cCount;
-            AppConstent.cc = cCount;
-          });
-        }
-      }
-      //log("cart count------------------->>$cc");
-    });
+    await _syncCartCount();
   }
 
   void gatinfoCount() async {
+    await _syncCartCount();
     SharedPreferences pref = await SharedPreferences.getInstance();
     GroceryAppConstant.isLogin = false;
-    int? Count = pref.getInt("itemCount");
     bool? ligin = pref.getBool("isLogin");
     setState(() {
       if (ligin != null) {
         GroceryAppConstant.isLogin = ligin;
-      }
-      if (Count == null) {
-        GroceryAppConstant.groceryAppCartItemCount = 0;
-      } else {
-        GroceryAppConstant.groceryAppCartItemCount = Count;
       }
       print(
           GroceryAppConstant.groceryAppCartItemCount.toString() + "itemCount");
@@ -227,9 +235,9 @@ class ProductDetailsState extends State<ProductDetails> {
       });
     });
 
-    catid = widget.plist.productLine!.split(',');
-    size = widget.plist.productScale!.split(',');
-    color = widget.plist.productColor!.split(',');
+    catid = _splitCsv(widget.plist.productLine);
+    size = _splitCsv(widget.plist.productScale);
+    color = _splitCsv(widget.plist.productColor);
 
     DatabaseHelper.getImage(widget.plist.productIs ?? "")
         .then((usersFromServe) {
@@ -246,11 +254,10 @@ class ProductDetailsState extends State<ProductDetails> {
 
     GroupPro(widget.plist.productIs ?? "").then((usersFromServe) {
       if (this.mounted) {
-        if (usersFromServe != null) {
+        if (usersFromServe != null && usersFromServe.isNotEmpty) {
           setState(() {
             group = usersFromServe;
-            print(group != null);
-            groupname = group[0].name;
+            groupname = group.first.name ?? "";
             print(group.toString() + "group info");
           });
         }
@@ -264,7 +271,7 @@ class ProductDetailsState extends State<ProductDetails> {
     });
 
     setState(() {
-      actualprice = int.parse(widget.plist.buyPrice ?? "");
+      actualprice = int.tryParse(widget.plist.buyPrice ?? "") ?? 0;
       total = actualprice;
       url = widget.plist.img ?? "";
       String mrp_price =
@@ -291,7 +298,6 @@ class ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    getcartCount();
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -889,8 +895,7 @@ class ProductDetailsState extends State<ProductDetails> {
                               child: Column(
                                 children: [
                                   // Color and Size Selection
-                                  if (widget.plist.productColor!.length >= 2 ||
-                                      widget.plist.productScale!.length >= 2)
+                                  if (_hasColorOptions || _hasSizeOptions)
                                     Container(
                                       padding: EdgeInsets.all(24),
                                       decoration: BoxDecoration(
@@ -946,9 +951,7 @@ class ProductDetailsState extends State<ProductDetails> {
                                           SizedBox(height: 24),
 
                                           // Color Selection
-                                          if (widget
-                                                  .plist.productColor!.length >=
-                                              2) ...[
+                                          if (_hasColorOptions) ...[
                                             Text(
                                               "Select Color",
                                               style: TextStyle(
@@ -1034,12 +1037,8 @@ class ProductDetailsState extends State<ProductDetails> {
                                           ],
 
                                           // Size Selection
-                                          if (widget
-                                                  .plist.productScale!.length >=
-                                              2) ...[
-                                            if (widget.plist.productColor!
-                                                    .length >=
-                                                2)
+                                          if (_hasSizeOptions) ...[
+                                            if (_hasColorOptions)
                                               SizedBox(height: 20),
                                             Text(
                                               "Select Size",
@@ -1169,10 +1168,8 @@ class ProductDetailsState extends State<ProductDetails> {
                                       SharedPreferences pref =
                                           await SharedPreferences.getInstance();
                                       if (GroceryAppConstant.isLogin) {
-                                        if (widget.plist.productColor!.length >
-                                                2 &&
-                                            widget.plist.productScale!.length >
-                                                2) {
+                                        if (_hasColorOptions &&
+                                            _hasSizeOptions) {
                                           if (_dropDownValue != null &&
                                               _dropDownValue1 != null) {
                                             addTocardval();
@@ -1189,9 +1186,7 @@ class ProductDetailsState extends State<ProductDetails> {
                                             showLongToast(
                                                 "Please select color and size");
                                           }
-                                        } else if (widget
-                                                .plist.productColor!.length >
-                                            2) {
+                                        } else if (_hasColorOptions) {
                                           if (_dropDownValue != null) {
                                             addTocardval();
                                             GroceryAppConstant
@@ -1207,9 +1202,7 @@ class ProductDetailsState extends State<ProductDetails> {
                                             showLongToast(
                                                 "Please select color");
                                           }
-                                        } else if (widget
-                                                .plist.productScale!.length >
-                                            2) {
+                                        } else if (_hasSizeOptions) {
                                           if (_dropDownValue1 != null) {
                                             addTocardval();
                                             GroceryAppConstant

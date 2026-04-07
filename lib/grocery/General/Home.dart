@@ -8,6 +8,7 @@ import 'package:EcoShine24/grocery/BottomNavigation/profile.dart';
 import 'package:EcoShine24/grocery/BottomNavigation/grocery_app_home_screen.dart';
 import 'package:EcoShine24/grocery/BottomNavigation/wishlist.dart';
 import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/dbhelper/CarrtDbhelper.dart';
 import 'package:EcoShine24/grocery/dbhelper/database_helper.dart';
 import 'package:EcoShine24/grocery/screen/custom_order.dart';
 import 'package:EcoShine24/grocery/screen/myorder.dart';
@@ -28,7 +29,11 @@ class GroceryAppState extends State<GroceryApp> {
 
   void getcartCount() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    final int cCount = pref.getInt("itemCount") ?? 0;
+    final List<ProductsCart> cartItems =
+        await DbProductManager().getProductList();
+    final int cCount = cartItems.length;
+    await pref.setInt("cc", cCount);
+    await pref.setInt("itemCount", cCount);
     setState(() {
       if (cCount <= 0) {
         cc = 0;
@@ -45,7 +50,11 @@ class GroceryAppState extends State<GroceryApp> {
   void gatinfoCount() async {
     pref = await SharedPreferences.getInstance();
 
-    int? Count = pref!.getInt("itemCount");
+    final List<ProductsCart> cartItems =
+        await DbProductManager().getProductList();
+    final int count = cartItems.length;
+    await pref!.setInt("cc", count);
+    await pref!.setInt("itemCount", count);
     bool? ligin = pref!.getBool("isLogin");
     String? userid = pref!.getString("user_id");
     String? image = pref!.getString("pp");
@@ -70,14 +79,14 @@ class GroceryAppState extends State<GroceryApp> {
       } else {
         GroceryAppConstant.isLogin = false;
       }
-      if (Count == null || Count <= 0) {
+      if (count <= 0) {
         GroceryAppConstant.groceryAppCartItemCount = 0;
         countval = 0;
         cc = 0;
       } else {
-        GroceryAppConstant.groceryAppCartItemCount = Count;
-        countval = Count;
-        cc = Count;
+        GroceryAppConstant.groceryAppCartItemCount = count;
+        countval = count;
+        cc = count;
       }
 //      print(Constant.carditemCount.toString()+"itemCount");
     });

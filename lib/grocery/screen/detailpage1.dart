@@ -30,6 +30,7 @@ class _ProductDetailsState extends State<ProductDetails1> {
   List<PVariant> pvarlist = [];
   String name = "";
   String textval = "Select varient";
+  bool _isProductLoading = true;
   _displayDialog(BuildContext context, int position) async {
     return showDialog(
         context: context,
@@ -154,7 +155,7 @@ class _ProductDetailsState extends State<ProductDetails1> {
     bool? ligin = pref.getBool("isLogin");
 
     setState(() {
-      GroceryAppConstant.isLogin = ligin!;
+      GroceryAppConstant.isLogin = ligin ?? false;
 
       if (Count == null) {
         GroceryAppConstant.groceryAppCartItemCount = 0;
@@ -172,8 +173,11 @@ class _ProductDetailsState extends State<ProductDetails1> {
 
     // Check if widget.id is valid before making API calls
     if (widget.id.isEmpty) {
-      // Handle empty ID case
-      Navigator.pop(context);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      });
       return;
     }
 
@@ -266,8 +270,10 @@ class _ProductDetailsState extends State<ProductDetails1> {
                   });
                 }
               });
+              _isProductLoading = false;
             });
           } else {
+            _isProductLoading = false;
             // Handle case when no product details are found
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -282,6 +288,9 @@ class _ProductDetailsState extends State<ProductDetails1> {
       }
     }).catchError((error) {
       if (mounted) {
+        setState(() {
+          _isProductLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Error loading product details"),
@@ -320,6 +329,46 @@ class _ProductDetailsState extends State<ProductDetails1> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isProductLoading || productdetails.isEmpty || totalmrp == null) {
+      return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              GroceryAppColors.tela,
+              GroceryAppColors.tela1,
+              GroceryAppColors.tela,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              title: Text(
+                "Product Details",
+                style: TextStyle(color: Colors.white),
+              ),
+              centerTitle: true,
+            ),
+            body: Center(
+              child: CircularProgressIndicator(
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(GroceryAppColors.white),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

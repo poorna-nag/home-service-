@@ -32,40 +32,30 @@ class _ProductListState extends State<ProductList>
   double? sgst1, cgst1, dicountValue, admindiscountprice;
 
   List<Products> products1 = [];
-  void gatinfoCount() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
 
-    int? Count = pref.getInt("itemCount");
+  Future<void> _syncCartCount() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    final List<ProductsCart> cartItems =
+        await DbProductManager().getProductList();
+    final int actualCount = cartItems.length;
+
+    if (!mounted) return;
     setState(() {
-      if (Count == null) {
-        GroceryAppConstant.groceryAppCartItemCount = 0;
-      } else {
-        GroceryAppConstant.groceryAppCartItemCount = Count;
-      }
-      print(
-          GroceryAppConstant.groceryAppCartItemCount.toString() + "itemCount");
+      cc = actualCount;
+      AppConstent.cc = actualCount;
+      GroceryAppConstant.groceryAppCartItemCount = actualCount;
     });
+
+    await pref.setInt("cc", actualCount);
+    await pref.setInt("itemCount", actualCount);
+  }
+
+  void gatinfoCount() async {
+    await _syncCartCount();
   }
 
   void getcartCount() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    int? cCount = pref.getInt("cc");
-    setState(() {
-      //log("cart get count------------------->>$cCount");
-      if (cCount != null) {
-        if (cCount == 0 || cCount < 0) {
-          cc = 0;
-          AppConstent.cc = 0;
-          //log(" AppConstent.cc------------------->>${AppConstent.cc}");
-        } else {
-          setState(() {
-            cc = cCount;
-            AppConstent.cc = cCount;
-          });
-        }
-      }
-      //log("cart count------------------->>$cc");
-    });
+    await _syncCartCount();
   }
 
   @override
@@ -103,7 +93,6 @@ class _ProductListState extends State<ProductList>
 
   @override
   Widget build(BuildContext context) {
-    getcartCount();
     return DefaultTabController(
         length: 4,
         child: Scaffold(
@@ -234,10 +223,10 @@ class _ProductListState extends State<ProductList>
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProductDetails(
-                                                    products1[index])),
-                                      );
+                                          builder: (context) =>
+                                              ProductDetails(products1[index]),
+                                        ),
+                                      ).then((_) => _syncCartCount());
                                     },
                                     child: Container(
                                       child: Row(

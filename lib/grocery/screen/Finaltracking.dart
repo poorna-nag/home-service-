@@ -15,26 +15,34 @@ class FinalOrderTracker extends StatelessWidget {
   final String? invoiceno;
   final String? dateval;
   final String? status;
-  int? difference;
-  int? daliverydate;
   FinalOrderTracker(this.invoiceno, this.dateval, this.status);
-  List<String>? list;
-  getSuvstring() {
-    String date = dateval!.substring(0, 10);
-    list = date.split("-");
-    int a = int.parse(list![0]);
-    int b = int.parse(list![1]);
-    int c = int.parse(list![2]);
-    daliverydate = int.parse(list![2]);
-    final birthday = DateTime(a, b, c);
-    final date2 = DateTime.now();
 
-    difference = date2.difference(birthday).inDays;
+  int _deliveryDay() {
+    final String rawDate = (dateval ?? "").trim();
+    if (rawDate.length < 10) {
+      return 0;
+    }
+
+    final String date = rawDate.substring(0, 10);
+    final List<String> parts = date.split("-");
+    if (parts.length < 3) {
+      return 0;
+    }
+
+    final int? a = int.tryParse(parts[0]);
+    final int? b = int.tryParse(parts[1]);
+    final int? c = int.tryParse(parts[2]);
+
+    if (a == null || b == null || c == null) {
+      return 0;
+    }
+
+    return c;
   }
 
   @override
   Widget build(BuildContext context) {
-    getSuvstring();
+    final int deliveryDay = _deliveryDay();
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -117,18 +125,54 @@ class FinalOrderTracker extends StatelessWidget {
                           child: FutureBuilder(
                               future: trackInvoiceOrder(invoiceno ?? ""),
                               builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                    child: Container(
+                                      padding: EdgeInsets.all(20),
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 3,
+                                      ),
+                                    ),
+                                  );
+                                }
+
                                 if (snapshot.hasData) {
+                                  final items =
+                                      snapshot.data ?? <InvoiceInvoice>[];
+                                  if (items.isEmpty) {
+                                    return Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: Text(
+                                          "No booking details available",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
                                   return ListView.builder(
-                                    itemCount: snapshot.data?.length == null
-                                        ? 0
-                                        : snapshot.data?.length,
+                                    itemCount: items.length,
                                     shrinkWrap: true,
                                     primary: false,
                                     scrollDirection: Axis.vertical,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      InvoiceInvoice item =
-                                          snapshot.data![index];
+                                      InvoiceInvoice item = items[index];
+                                      final String productId =
+                                          item.productId ?? "";
+                                      final String imageUrl =
+                                          item.image != null &&
+                                                  item.image!.isNotEmpty
+                                              ? GroceryAppConstant
+                                                      .Product_Imageurl1 +
+                                                  item.image!
+                                              : "";
                                       return Container(
                                         margin: EdgeInsets.only(bottom: 16),
                                         child: Card(
@@ -155,16 +199,13 @@ class FinalOrderTracker extends StatelessWidget {
                                               borderRadius:
                                                   BorderRadius.circular(20),
                                               onTap: () {
-                                                // Check if productId is valid before navigation
-                                                if (item.productId != null &&
-                                                    item.productId!
-                                                        .isNotEmpty) {
+                                                if (productId.isNotEmpty) {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            ProductDetails1(item
-                                                                .productId!)),
+                                                            ProductDetails1(
+                                                                productId)),
                                                   );
                                                 } else {
                                                   // Show error message if productId is invalid
@@ -221,38 +262,56 @@ class FinalOrderTracker extends StatelessWidget {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(14),
-                                                        child: Image.network(
-                                                          GroceryAppConstant
-                                                                  .Product_Imageurl1 +
-                                                              item.image
-                                                                  .toString(),
-                                                          fit: BoxFit.cover,
-                                                          errorBuilder:
-                                                              (context, error,
-                                                                  stackTrace) {
-                                                            return Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: GroceryAppColors
-                                                                    .tela
-                                                                    .withOpacity(
-                                                                        0.1),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            14),
-                                                              ),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .image_not_supported,
-                                                                color:
-                                                                    GroceryAppColors
-                                                                        .tela,
-                                                                size: 40,
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
+                                                        child:
+                                                            imageUrl.isNotEmpty
+                                                                ? Image.network(
+                                                                    imageUrl,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    errorBuilder:
+                                                                        (context,
+                                                                            error,
+                                                                            stackTrace) {
+                                                                      return Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color: GroceryAppColors
+                                                                              .tela
+                                                                              .withOpacity(0.1),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(14),
+                                                                        ),
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .image_not_supported,
+                                                                          color:
+                                                                              GroceryAppColors.tela,
+                                                                          size:
+                                                                              40,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                  )
+                                                                : Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: GroceryAppColors
+                                                                          .tela
+                                                                          .withOpacity(
+                                                                              0.1),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              14),
+                                                                    ),
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .image_not_supported,
+                                                                      color: GroceryAppColors
+                                                                          .tela,
+                                                                      size: 40,
+                                                                    ),
+                                                                  ),
                                                       ),
                                                     ),
                                                     SizedBox(width: 16),
@@ -514,11 +573,15 @@ class FinalOrderTracker extends StatelessWidget {
                                   );
                                 } else {
                                   return Center(
-                                    child: Container(
+                                    child: Padding(
                                       padding: EdgeInsets.all(20),
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 3,
+                                      child: Text(
+                                        "Unable to load booking details",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
                                   );
@@ -537,13 +600,14 @@ class FinalOrderTracker extends StatelessWidget {
   }
 
   footer(BuildContext context) {
+    final int deliveryDay = _deliveryDay();
     return Container(
       padding: EdgeInsets.all(20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // Cancel Button
-          if (daliverydate == 00 && status != 'Cancelled')
+          if (deliveryDay == 00 && status != 'Cancelled')
             Expanded(
               child: Container(
                 height: 50,
@@ -600,12 +664,12 @@ class FinalOrderTracker extends StatelessWidget {
               ),
             ),
           // Refund Button
-          if (daliverydate != 00)
+          if (deliveryDay != 00)
             Expanded(
               child: Container(
                 height: 50,
                 margin: EdgeInsets.only(
-                    left: daliverydate == 00 && status != 'Cancelled' ? 8 : 0),
+                    left: deliveryDay == 00 && status != 'Cancelled' ? 8 : 0),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -676,8 +740,8 @@ class FinalOrderTracker extends StatelessWidget {
     String returnStr;
     double discount = 0.0;
     returnStr = discount.toString();
-    double byprice1 = double.parse(byprice);
-    double discount1 = double.parse(discount2);
+    double byprice1 = double.tryParse(byprice) ?? 0.0;
+    double discount1 = double.tryParse(discount2) ?? 0.0;
 
     discount = (byprice1 - (byprice1 * discount1) / 100.0);
 
@@ -789,7 +853,8 @@ class FinalOrderTracker extends StatelessWidget {
     map['user_id'] = GroceryAppConstant.user_id;
     map['X-Api-Key'] = GroceryAppConstant.API_KEY;
     map['stars'] =
-        (_ratingController!.toStringAsFixed(GroceryAppConstant.val)).toString();
+        ((_ratingController ?? 1.0).toStringAsFixed(GroceryAppConstant.val))
+            .toString();
     map['review'] = resignofcause1.text;
     map['shop_id'] = GroceryAppConstant.Shop_id;
     map['product'] = id;

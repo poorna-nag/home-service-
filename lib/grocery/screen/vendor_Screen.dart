@@ -1,21 +1,16 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:aladdinmart/constent/app_constent.dart';
-import 'package:aladdinmart/dbhelper/database_helper.dart';
-import 'package:aladdinmart/grocery/BottomNavigation/wishlist.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/model/productmodel.dart';
-import 'package:aladdinmart/grocery/screen/SubCategry.dart';
-import 'package:aladdinmart/grocery/screen/mv_products.dart';
-import 'package:aladdinmart/grocery/screen/vendor_product_categories.dart';
-import 'package:aladdinmart/model/ListModel.dart';
-import 'package:aladdinmart/utils/dimensions.dart';
-import 'package:aladdinmart/utils/styles.dart';
+import 'package:EcoShine24/constent/app_constent.dart';
+import 'package:EcoShine24/dbhelper/database_helper.dart';
+import 'package:EcoShine24/grocery/BottomNavigation/wishlist.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/model/productmodel.dart';
+import 'package:EcoShine24/grocery/screen/mv_products.dart';
+import 'package:EcoShine24/model/ListModel.dart';
+import 'package:EcoShine24/utils/dimensions.dart';
+import 'package:EcoShine24/utils/styles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VendorList extends StatefulWidget {
@@ -117,7 +112,7 @@ class _VendorListState extends State<VendorList>
     return DefaultTabController(
         length: 4,
         child: Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: GroceryAppColors.tela1,
             appBar: AppBar(
               backgroundColor: GroceryAppColors.tela,
               leading: Padding(
@@ -133,7 +128,7 @@ class _VendorListState extends State<VendorList>
                     child: Icon(
                       Icons.arrow_back,
                       size: 25,
-                      color: GroceryAppColors.white,
+                      color: GroceryAppColors.tela1,
                     ),
                   )),
               title: Row(
@@ -145,36 +140,12 @@ class _VendorListState extends State<VendorList>
                       child: Text(
                         widget.title.isEmpty ? "Products" : widget.title,
                         style: TextStyle(
-                            color: GroceryAppColors.white, fontSize: 18),
+                            color: GroceryAppColors.tela1, fontSize: 18),
                       ),
                     ),
                   ),
                   Row(
                     children: [
-                      /* InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => UserVenderSerch()),
-                          );
-                        },
-                        child: Stack(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 3),
-                              child: Icon(
-                                Icons.search,
-                                color: AppColors.black,
-                                size: 30,
-                              ),
-                            ),
-//                    showCircle(),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),*/
                       InkWell(
                         onTap: () {
                           Navigator.push(
@@ -188,7 +159,7 @@ class _VendorListState extends State<VendorList>
                               padding: EdgeInsets.only(top: 13),
                               child: Icon(
                                 Icons.add_shopping_cart,
-                                color: GroceryAppColors.white,
+                                color: GroceryAppColors.tela1,
                               ),
                             ),
                             Align(
@@ -199,16 +170,15 @@ class _VendorListState extends State<VendorList>
                                   padding: const EdgeInsets.all(5.0),
                                   decoration: new BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: GroceryAppColors.tela1,
-                                    // color: Colors.orange,
+                                    color: GroceryAppColors.tela,
                                   ),
                                   child: Text('${cc}',
                                       style: TextStyle(
-                                          color: Colors.white, fontSize: 15.0)),
+                                          color: GroceryAppColors.tela1,
+                                          fontSize: 15.0)),
                                 ),
                               ),
                             ),
-                            //showCircle(),
                           ],
                         ),
                       )
@@ -315,6 +285,7 @@ class _VendorListState extends State<VendorList>
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
+            color: GroceryAppColors.tela1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -1,23 +1,21 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/Auth/Form6.dart';
-import 'package:aladdinmart/Auth/widgets/custom_shape.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:aladdinmart/Auth/signin.dart';
-import 'package:aladdinmart/Auth/widgets/customappbar.dart';
-import 'package:aladdinmart/Auth/widgets/responsive_ui.dart';
-import 'package:aladdinmart/Auth/widgets/textformfield.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
-import 'package:aladdinmart/model/RegisterModel.dart';
+import 'package:EcoShine24/Auth/signin.dart';
+import 'package:EcoShine24/Auth/widgets/responsive_ui.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/model/RegisterModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/phone_number_utils.dart';
 
 class ForgetPass extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: ForgetPassword(),
       ),
     );
@@ -26,18 +24,64 @@ class ForgetPass extends StatelessWidget {
 
 class ForgetPassword extends StatefulWidget {
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _ForgetPasswordState createState() => _ForgetPasswordState();
 }
 
-class _SignInScreenState extends State<ForgetPassword> {
+class _ForgetPasswordState extends State<ForgetPassword>
+    with TickerProviderStateMixin {
   double? _height;
   double? _width;
   double? _pixelRatio;
   bool _large = false;
   bool _medium = false;
+  bool _isLoading = false;
   TextEditingController nameController = TextEditingController();
-//  TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _key = GlobalKey();
+  late AnimationController _fadeController;
+  late AnimationController _slideController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      duration: Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _slideController = AnimationController(
+      duration: Duration(milliseconds: 1200),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeInOut,
+    ));
+
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _slideController,
+      curve: Curves.easeOutBack,
+    ));
+
+    _fadeController.forward();
+    _slideController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    _slideController.dispose();
+    nameController.dispose();
+    super.dispose();
+  }
+
   void _showLongToast(String s) {
     Fluttertoast.showToast(
       msg: s,
@@ -46,31 +90,51 @@ class _SignInScreenState extends State<ForgetPassword> {
   }
 
   Future _getEmployee() async {
+    final validationMessage =
+        PhoneNumberUtils.validateMobile(nameController.text);
+    if (validationMessage != null) {
+      _showLongToast(validationMessage);
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
     SharedPreferences pref = await SharedPreferences.getInstance();
 
     var map = new Map<String, dynamic>();
-    map['shop_id'] = FoodAppConstant.Shop_id;
+    map['shop_id'] = GroceryAppConstant.Shop_id;
     map['mobile'] = nameController.text;
-    final response = await http.post(
-        Uri.parse(FoodAppConstant.base_url + 'api/forgot.php'),
-        body: map);
-    if (response.statusCode == 200) {
-      final jsonBody = json.decode(response.body);
-      User user = User.fromJson(jsonDecode(response.body));
-      print(jsonBody.toString());
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SignInPage()));
-      if (user.message.toString() == "Password has been sent to your email") {
-//
-        _showLongToast(user.message.toString());
-        Navigator.of(context).pop();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignInPage()));
+
+    try {
+      final response = await http.post(
+          Uri.parse(GroceryAppConstant.base_url + 'api/forgot.php'),
+          body: map);
+
+      if (response.statusCode == 200) {
+        final jsonBody = json.decode(response.body);
+        User user = User.fromJson(jsonDecode(response.body));
+        print(jsonBody.toString());
+
+        if (user.message.toString() == "Password has been sent to your email") {
+          _showLongToast(user.message.toString());
+          Navigator.of(context).pop();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SignInPage()));
+        } else {
+          _showLongToast(user.message.toString());
+        }
       } else {
-        _showLongToast(user.message.toString());
+        _showLongToast("Unable to process request. Please try again.");
       }
-    } else
-      throw Exception("Unable to get Employee list");
+    } catch (e) {
+      _showLongToast("Network error. Please check your connection.");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -80,275 +144,464 @@ class _SignInScreenState extends State<ForgetPassword> {
     _pixelRatio = MediaQuery.of(context).devicePixelRatio;
     _large = ResponsiveWidget.isScreenLarge(_width!, _pixelRatio!);
     _medium = ResponsiveWidget.isScreenMedium(_width!, _pixelRatio!);
-    return Material(
-      child: Container(
-        height: _height,
-        width: _width,
-        padding: EdgeInsets.only(bottom: 5),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              // Opacity(opacity: 0.88, child: CustomAppBar()),
-              clipShape(),
-              welcomeTextRow(),
-              signInTextRow(),
-              form(),
-//              forgetPassTextRow(),
-              SizedBox(height: _height! / 12),
-              button(),
-//              signUpTextRow(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-   Widget clipShape() {
-    //double height = MediaQuery.of(context).size.height;
-    return Stack(
-      children: <Widget>[
-        Opacity(
-          opacity: 0.75,
-          child: ClipPath(
-            clipper: CustomShapeClipper(),
-            child: Container(
-              height: _large
-                  ? _height! / 3
-                  : (_medium ? _height! / 2.75 : _height! / 2.5),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [FoodAppColors.tela, FoodAppColors.tela1],
-                ),
-              ),
-            ),
-          ),
-        ),
-        Opacity(
-          opacity: 0.5,
-          child: ClipPath(
-            clipper: CustomShapeClipper2(),
-            child: Container(
-              height: _large
-                  ? _height! / 3.5
-                  : (_medium ? _height! / 2.99999 : _height! / 3),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [FoodAppColors.tela, FoodAppColors.tela1],
-                ),
-              ),
-            ),
-          ),
-        ),
-        Container(
-          // color: Colors.grey,
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(
-              top: _large
-                  ? _height! / 35
-                  : (_medium ? _height! / 10 : _height! / 20)),
-          child: Container(
-            width: 200,
-            height: 150,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/logo.png',
-                ),
-                fit: BoxFit.fill,
-              ),
-            ),
-            // child: Image.asset(
-            //   'assets/images/logo.png',
-            //   height: 260,
-            //   width: 260,
-            //   fit: BoxFit.fill,
-            // ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget welcomeTextRow() {
-    return Container(
-      margin: EdgeInsets.only(left: _width! / 20, top: _height! / 100),
-      child: Row(
-        children: <Widget>[
-          Text(
-            "Welcome",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: _large ? 60 : (_medium ? 50 : 40),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget signInTextRow() {
-    return Container(
-      margin: EdgeInsets.only(left: _width! / 15.0),
-      child: Row(
-        children: <Widget>[
-          Text(
-            "Change your password!",
-            style: TextStyle(
-              fontWeight: FontWeight.w200,
-              fontSize: _large ? 20 : (_medium ? 17.5 : 15),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget form() {
-    return Container(
-      margin: EdgeInsets.only(
-          left: _width! / 12.0, right: _width! / 12.0, top: _height! / 15.0),
-      child: Form(
-        key: _key,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
         child: Column(
-          children: <Widget>[
-            emailTextFormField(),
-            SizedBox(height: _height! / 40.0),
-//            passwordTextFormField(),
+          children: [
+            // Top section with app gradient theme
+            Expanded(
+              flex: 5,
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      GroceryAppColors.tela,
+                      GroceryAppColors.tela1,
+                      GroceryAppColors.tela,
+                    ],
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    // Decorative circles
+                    Positioned(
+                      top: -40,
+                      right: -50,
+                      child: AnimatedBuilder(
+                        animation: _fadeAnimation,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _fadeAnimation.value * 0.15,
+                            child: Container(
+                              width: 180,
+                              height: 180,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: Colors.white.withOpacity(0.3),
+                                    width: 2),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 20,
+                      left: -60,
+                      child: AnimatedBuilder(
+                        animation: _fadeAnimation,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _fadeAnimation.value * 0.12,
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: Colors.white.withOpacity(0.25),
+                                    width: 2),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    // Content
+                    SlideTransition(
+                      position: _slideAnimation,
+                      child: FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: Padding(
+                          padding: EdgeInsets.all(24),
+                          child: Column(
+                            children: [
+                              // Back button
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: GestureDetector(
+                                  onTap: () => Navigator.pop(context),
+                                  child: Container(
+                                    height: 44,
+                                    width: 44,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.3),
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.arrow_back_ios_new_rounded,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // Logo and brand section
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 100,
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.15),
+                                            blurRadius: 25,
+                                            offset: Offset(0, 10),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Icon(
+                                        Icons.lock_reset_rounded,
+                                        size: 50,
+                                        color: GroceryAppColors.tela,
+                                      ),
+                                    ),
+                                    SizedBox(height: 28),
+                                    Text(
+                                      "Forgot Password?",
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        letterSpacing: 0.5,
+                                        shadows: [
+                                          Shadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            offset: Offset(0, 2),
+                                            blurRadius: 4,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 12),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: Text(
+                                        "No worries! Enter your mobile number\nand we'll help you reset your password",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white.withOpacity(0.95),
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.5,
+                                          letterSpacing: 0.3,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Bottom section with white background and form
+            Expanded(
+              flex: 5,
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: GroceryAppColors.tela.withOpacity(0.15),
+                      blurRadius: 20,
+                      offset: Offset(0, -5),
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    left: 24,
+                    right: 24,
+                    top: 30,
+                    bottom: 24,
+                  ),
+                  child: Form(
+                    key: _key,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Form title
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Reset Password",
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: GroceryAppColors.tela,
+                                letterSpacing: 0.3,
+                                height: 1.2,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "Enter your registered mobile number",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w500,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 32),
+
+                        // Mobile number label
+                        Padding(
+                          padding: EdgeInsets.only(left: 4, bottom: 8),
+                          child: Text(
+                            "Mobile Number",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: GroceryAppColors.tela,
+                            ),
+                          ),
+                        ),
+                        // Mobile number input
+                        _buildModernTextField(
+                          controller: nameController,
+                          hintText: "Enter your mobile number",
+                          prefixIcon: Icons.phone_android_rounded,
+                          keyboardType: TextInputType.number,
+                        ),
+                        SizedBox(height: 32),
+
+                        // Reset button
+                        _buildModernButton(
+                          onPressed: () {
+                            if (!PhoneNumberUtils.isValidMobile(
+                                nameController.text)) {
+                              _showLongToast(
+                                  "Please enter a valid 10-digit mobile number");
+                            } else {
+                              _getEmployee();
+                            }
+                          },
+                          text: "SEND RESET LINK",
+                          isLoading: _isLoading,
+                        ),
+                        SizedBox(height: 24),
+                        _buildOrDivider(),
+                        SizedBox(height: 24),
+
+                        // Back to sign in
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 14, horizontal: 24),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: GroceryAppColors.tela, width: 2),
+                                borderRadius: BorderRadius.circular(14),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        GroceryAppColors.tela.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.arrow_back_rounded,
+                                    color: GroceryAppColors.tela,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    "Back to Sign In",
+                                    style: TextStyle(
+                                      color: GroceryAppColors.tela,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget emailTextFormField() {
-    return CustomTextField(
-      obscureText: false,
-      keyboardType: TextInputType.number,
-      textEditingController: nameController,
-      icon: Icons.phone_android,
-      hint: "Mobile Number",
-    );
-  }
-
-//  Widget passwordTextFormField() {
-//    return CustomTextField(
-//      keyboardType: TextInputType.emailAddress,
-//      textEditingController: passwordController,
-//      icon: Icons.lock,
-//      obscureText: true,
-//      hint: "Password",
-//    );
-//  }
-
-  Widget forgetPassTextRow() {
+  Widget _buildModernTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required IconData prefixIcon,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
     return Container(
-      margin: EdgeInsets.only(top: _height! / 40.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Forgot your password?",
-            style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: _large ? 14 : (_medium ? 12 : 10)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: GroceryAppColors.tela.withOpacity(0.2),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: GroceryAppColors.tela.withOpacity(0.08),
+            blurRadius: 10,
+            offset: Offset(0, 4),
           ),
-          SizedBox(
-            width: 5,
-          ),
-          GestureDetector(
-            onTap: () {
-              print("Routing");
-            },
-            child: Text(
-              "Recover",
-              style: TextStyle(
-                  fontWeight: FontWeight.w600, color: FoodAppColors.boxColor1),
-            ),
-          )
         ],
       ),
-    );
-  }
-
-  Widget button() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.all(0.0),
-        elevation: 0,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        textStyle: TextStyle(
-          color: Colors.white,
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        inputFormatters: keyboardType == TextInputType.number
+            ? PhoneNumberUtils.inputFormatters
+            : null,
+        style: TextStyle(
+          fontSize: 15,
+          color: Colors.black87,
+          fontWeight: FontWeight.w500,
         ),
-      ),
-      onPressed: () {
-        if (nameController.text.length != 10) {
-          _showLongToast("Please enter the valied No.");
-        }
-//        else if(passwordController.text.length <3) {
-//          _showLongToast("Password should be 5 latter");
-//        }
-        else {
-          _getEmployee();
-        }
-
-//          print("Routing to your account");
-//          Scaffold
-//              .of(context)
-//              .showSnackBar(SnackBar(content: Text('Login Successful')));
-      },
-      child: Container(
-        alignment: Alignment.center,
-        width:
-            _large ? _width! / 4 : (_medium ? _width! / 3.75 : _width! / 3.5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          gradient: LinearGradient(
-            colors: <Color>[FoodAppColors.boxColor1, FoodAppColors.boxColor2],
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: Colors.grey[400],
+            fontSize: 15,
+          ),
+          prefixIcon: Icon(
+            prefixIcon,
+            color: GroceryAppColors.tela,
+            size: 22,
+          ),
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
           ),
         ),
-        padding: const EdgeInsets.all(12.0),
-        child: Text('Submit',
-            style: TextStyle(fontSize: _large ? 14 : (_medium ? 12 : 10))),
       ),
     );
   }
 
-  Widget signUpTextRow() {
+  Widget _buildModernButton({
+    required VoidCallback onPressed,
+    required String text,
+    bool isLoading = false,
+  }) {
     return Container(
-      margin: EdgeInsets.only(top: _height! / 120.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Don't have an account?",
-            style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: _large ? 14 : (_medium ? 12 : 10)),
+      width: double.infinity,
+      height: 54,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            GroceryAppColors.tela,
+            GroceryAppColors.tela1,
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: GroceryAppColors.tela.withOpacity(0.4),
+            blurRadius: 15,
+            offset: Offset(0, 8),
           ),
-          SizedBox(
-            width: 5,
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Form6()),
-              );
-            },
-            child: Text(
-              "Sign up",
-              style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: FoodAppColors.boxColor1,
-                  fontSize: _large ? 19 : (_medium ? 17 : 15)),
-            ),
-          )
         ],
       ),
+      child: ElevatedButton(
+        onPressed: isLoading ? null : onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        child: isLoading
+            ? SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(
+                text,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildOrDivider() {
+    return Row(
+      children: [
+        Expanded(child: Divider(color: Colors.grey[300], thickness: 1)),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            "OR",
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Expanded(child: Divider(color: Colors.grey[300], thickness: 1)),
+      ],
     );
   }
 }

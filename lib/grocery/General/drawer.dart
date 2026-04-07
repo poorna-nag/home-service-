@@ -1,23 +1,16 @@
 import 'dart:io';
 
-import 'package:aladdinmart/model/ShopDModel.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:EcoShine24/model/ShopDModel.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:aladdinmart/Auth/signin.dart';
-import 'package:aladdinmart/grocery/BottomNavigation/categories.dart';
-import 'package:aladdinmart/grocery/BottomNavigation/profile.dart';
-import 'package:aladdinmart/grocery/BottomNavigation/profiledraw.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/General/Home.dart';
-import 'package:aladdinmart/grocery/Web/WebviewTermandCondition.dart';
-import 'package:aladdinmart/grocery/dbhelper/database_helper.dart';
-import 'package:aladdinmart/grocery/screen/CustomeOrder.dart';
-import 'package:aladdinmart/grocery/screen/ShowAddress.dart';
-import 'package:aladdinmart/grocery/screen/myorder.dart';
-import 'package:aladdinmart/grocery/screen/newWishlist.dart';
-import 'package:aladdinmart/grocery/screen/productlist.dart';
-import 'package:aladdinmart/screen/wallecttransation.dart';
+import 'package:EcoShine24/Auth/signin.dart';
+import 'package:EcoShine24/grocery/BottomNavigation/profiledraw.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/General/Home.dart';
+import 'package:EcoShine24/grocery/Web/WebviewTermandCondition.dart';
+import 'package:EcoShine24/grocery/dbhelper/database_helper.dart';
+import 'package:EcoShine24/grocery/screen/ShowAddress.dart';
+import 'package:EcoShine24/grocery/screen/myorder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:share_plus/share_plus.dart';
@@ -44,9 +37,6 @@ class _AppDrawerState extends State<AppDrawer> {
     image = pref!.getString("pp");
     cityname = pref!.getString("city");
     mobile = pref!.getString("mobile");
-    if (islogin == null) {
-      islogin = false;
-    }
 
     // print(islogin);
     setState(() {
@@ -189,24 +179,43 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      physics: ScrollPhysics(),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFF8F9FA),
+            Colors.white,
+          ],
+        ),
+      ),
       child: Column(
         children: <Widget>[
+          // Modern Header with Gradient
           Container(
-            color: GroceryAppColors.tela,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 32),
-              child: Container(
-                height: 68,
-                color: GroceryAppColors.tela,
-                child: Center(
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 11, right: 12),
-                        child: IconButton(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  GroceryAppColors.tela,
+                  GroceryAppColors.tela1,
+                  GroceryAppColors.tela,
+                ],
+              ),
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  // Header with Back and Cart
+                  Container(
+                    height: 60,
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: [
+                        IconButton(
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -214,24 +223,31 @@ class _AppDrawerState extends State<AppDrawer> {
                                   builder: (context) => GroceryApp()),
                             );
                           },
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            color: GroceryAppColors.white,
-                            size: 25,
+                          icon: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "Menu",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: GroceryAppColors.white,
+                        Expanded(
+                          child: Text(
+                            "Menu",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 22,
+                              letterSpacing: 0.5,
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: IconButton(
+                        IconButton(
                           onPressed: () {
                             if (GroceryAppConstant.isLogin) {
                               Navigator.push(
@@ -247,131 +263,216 @@ class _AppDrawerState extends State<AppDrawer> {
                               );
                             }
                           },
-                          icon: Icon(
-                            Icons.shopping_bag,
-                            color: GroceryAppColors.white,
-                            size: 25,
+                          icon: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 8,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.shopping_bag_outlined,
+                              color: GroceryAppColors.tela,
+                              size: 22,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            /* USER PROFILE DRAWER Column(
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(top: 40,left: 20),
-                  color: AppColors.tela1,
-                  height: 140,
-                  width: MediaQuery.of(context).size.width,
-                  child:CircleAvatar(
-                    radius: 50,
-                    backgroundColor: AppColors.white,
-                    child: ClipOval(
-                      child: new SizedBox(
-                        width: 100.0,
-                        height: 100.0,
-                        child:Constant.image==null? Image.asset('assets/images/logo.png',):Constant.image.length==1?Image.asset('assets/images/logo.png',):Constant.image=="https://www.bigwelt.com/manage/uploads/customers/nopp.png"? Image.asset('assets/images/logo.png',):Image.network(
-                          Constant.image,
-                          fit: BoxFit.fill,),
-                      ),
+                        SizedBox(width: 8),
+                      ],
                     ),
                   ),
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(left: 20),
-                  child:Text(islogin?Constant.name:" ",style: TextStyle(color: Colors.black),) ,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(left: 20,bottom: 20),
-                  child:Text(islogin?Constant.email:" ",style: TextStyle(color: Colors.black),),
-                ),
-            /*    InkWell(
-                  onTap: (){
-                    _displayDialog(context);
-                  },
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: 20,bottom: 20),
-                    child:Text(Constant.citname!=null?Constant.citname:" ",
-                      overflow:TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(color: Colors.black),),
-                  ),
-                ),*/
-              ],
-            ),*/
-          ),
 
-          /* UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage('assets/images/drawer-header.jpg'),
-                )),
-            currentAccountPicture:  CircleAvatar(
-              radius:30,
-              backgroundColor: Colors.black,
-              backgroundImage:Constant.image==null? AssetImage('assets/images/logo.jpg',):Constant.image.length==1?AssetImage('assets/images/logo.jpg',):Constant.image=="https://www.bigwelt.com/manage/uploads/customers/nopp.png"? AssetImage('assets/images/logo.jpg',):NetworkImage(
-                  Constant.image),
-            ),
-            accountName: Text(islogin?Constant.name:" ",style: TextStyle(color: Colors.black),),
-            accountEmail: Text(islogin?Constant.email:" ",style: TextStyle(color: Colors.black),),
-          ),*/
-          Container(
-            child: ListView(
-              physics: ScrollPhysics(),
-              shrinkWrap: true,
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.home, color: GroceryAppColors.tela),
-                  title: Text('Home'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => GroceryApp()),
-                    );
-                  },
-                ),
-                Divider(),
-                ExpansionTile(
-                  title: Text(
-                    'My Account',
-                  ),
-                  leading: Icon(Icons.person, color: GroceryAppColors.tela),
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 50),
-                      child: ListTile(
-                          leading: Icon(
-                            Icons.person,
-                            color: GroceryAppColors.tela,
+                  // User Profile Section
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 24),
+                    child: Row(
+                      children: [
+                        // Avatar
+                        Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                blurRadius: 12,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
                           ),
-                          title: Text("My Profile"),
-                          onTap: () {
+                          padding: EdgeInsets.all(3),
+                          child: CircleAvatar(
+                            radius: 33,
+                            backgroundColor: Colors.white,
+                            child: ClipOval(
+                              child: SizedBox(
+                                width: 66,
+                                height: 66,
+                                child: GroceryAppConstant.image.isEmpty ||
+                                        GroceryAppConstant.image.length == 1 ||
+                                        GroceryAppConstant.image ==
+                                            "https://www.bigwelt.com/manage/uploads/customers/nopp.png"
+                                    ? Image.asset(
+                                        'assets/images/logo.png',
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.network(
+                                        GroceryAppConstant.image,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Image.asset(
+                                          'assets/images/logo.png',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        // User Info
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                GroceryAppConstant.name.isEmpty ||
+                                        GroceryAppConstant.name.length <= 1
+                                    ? "Guest User"
+                                    : GroceryAppConstant.name,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 4),
+                              if (GroceryAppConstant.isLogin)
+                                Text(
+                                  GroceryAppConstant.email ?? "",
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.9),
+                                    fontSize: 13,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              if (!GroceryAppConstant.isLogin)
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SignInPage()),
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 6),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 6,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      "Sign In",
+                                      style: TextStyle(
+                                        color: GroceryAppColors.tela,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        // Profile Arrow
+                        IconButton(
+                          onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ProfileViewdraw()),
                             );
-                          }),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 50),
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.shopping_bag,
-                          color: GroceryAppColors.tela,
+                          },
+                          icon: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
                         ),
-                        title: Text("My Bookings"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Menu Items
+          Expanded(
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Column(
+                children: <Widget>[
+                  // Main Navigation
+                  _buildSectionHeader("Main Menu"),
+                  _buildModernListTile(
+                    icon: Icons.home_rounded,
+                    title: 'Home',
+                    color: GroceryAppColors.tela,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => GroceryApp()),
+                      );
+                    },
+                  ),
+
+                  // My Account Expansion
+                  _buildModernExpansionTile(
+                    title: 'My Account',
+                    icon: Icons.person_rounded,
+                    color: GroceryAppColors.tela1,
+                    children: [
+                      _buildModernSubListTile(
+                        icon: Icons.account_circle_rounded,
+                        title: "My Profile",
+                        color: GroceryAppColors.tela,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileViewdraw()),
+                          );
+                        },
+                      ),
+                      _buildModernSubListTile(
+                        icon: Icons.shopping_bag_rounded,
+                        title: "My Bookings",
+                        color: GroceryAppColors.tela1,
                         onTap: () {
                           if (GroceryAppConstant.isLogin) {
                             Navigator.push(
@@ -388,16 +489,10 @@ class _AppDrawerState extends State<AppDrawer> {
                           }
                         },
                       ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 50),
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.add_road,
-                          color: GroceryAppColors.tela,
-                        ),
-                        title: Text("My Addresses"),
+                      _buildModernSubListTile(
+                        icon: Icons.location_on_rounded,
+                        title: "My Addresses",
+                        color: GroceryAppColors.tela,
                         onTap: () {
                           if (GroceryAppConstant.isLogin) {
                             Navigator.push(
@@ -414,378 +509,203 @@ class _AppDrawerState extends State<AppDrawer> {
                           }
                         },
                       ),
-                    ),
-                  ],
-                ),
-                Divider(),
-                /*   ListTile(
-                  leading: Icon(Icons.list_alt,
-                      color: AppColors.tela),
-                  title: Text('Shop By Categories'),
-                  trailing: Text('',
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
-                  onTap: () {
-                    Navigator.of(context).pop();
+                    ],
+                  ),
 
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Cgategorywise("0")),);
-                  },
-                ), */
+                  SizedBox(height: 8),
+                  _buildSectionHeader("Support & Info"),
 
-                /* ListTile(
-                  leading: Icon(Icons.offline_bolt_rounded,
-                      color: AppColors.tela),
-                  title: Text('Deals of the Day'),
-                  trailing: Text('New',
-                      style: TextStyle(color: Colors.red)),
-                  onTap: () {
-                    Navigator.of(context).pop();
+                  _buildModernListTile(
+                    icon: Icons.phone_rounded,
+                    title: 'Contact Us',
+                    color: GroceryAppColors.tela,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WebViewClass("Contact Us",
+                                  "${GroceryAppConstant.base_url}contact")));
+                    },
+                  ),
+                  _buildModernListTile(
+                    icon: Icons.privacy_tip_rounded,
+                    title: 'Privacy Policy',
+                    color: GroceryAppColors.tela1,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WebViewClass(
+                                  "Privacy Policy",
+                                  "${GroceryAppConstant.base_url}pp")));
+                    },
+                  ),
+                  _buildModernListTile(
+                    icon: Icons.local_shipping_rounded,
+                    title: 'Shipping Policy',
+                    color: GroceryAppColors.tela,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WebViewClass(
+                                  "Shipping Policy",
+                                  "https://EcoShine24.w4u.in/cr")));
+                    },
+                  ),
+                  _buildModernListTile(
+                    icon: Icons.info_rounded,
+                    title: 'About Us',
+                    color: GroceryAppColors.tela1,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WebViewClass("About Us",
+                                  "${GroceryAppConstant.base_url}about")));
+                    },
+                  ),
+                  _buildModernListTile(
+                    icon: Icons.description_rounded,
+                    title: 'Terms & Conditions',
+                    color: GroceryAppColors.tela,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WebViewClass(
+                                  "Terms & Conditions",
+                                  "${GroceryAppConstant.base_url}tc")));
+                    },
+                  ),
+                  _buildModernListTile(
+                    icon: Icons.share_rounded,
+                    title: 'Share App',
+                    color: GroceryAppColors.tela1,
+                    onTap: () {
+                      _shairApp();
+                    },
+                  ),
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ProductList("day","DEALS OF THE DAY")),
-                    );
-                  },
-                ),*/
-
-                /* ListTile(
-                  leading: Icon(Icons.stacked_line_chart,
-                      color: AppColors.tela),
-                  title: Text('Top Products'),
-                  trailing: Text('',
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ProductList("top","TOP PRODUCTS")),
-                    );
-                  },
-                ),*/
-
-                /* ListTile(
-                  leading: Icon(Icons.traffic,
-                      color: AppColors.tela),
-                  title: Text('New Arrival'),
-                  trailing: Text('',
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>
-                          ProductList("day",
-                              Constant.AProduct_type_Name2)),);
-                  },
-                ),*/
-//                  ListTile(
-//                   leading:
-//                   Icon(Icons.favorite, color: GroceryAppColors.tela),
-//                   title: Text('My Wishlist'),
-//                   /* trailing: Container(
-//                     padding: const EdgeInsets.all(10.0),
-//                     decoration: new BoxDecoration(
-//                       shape: BoxShape.circle,
-//                       color: Theme.of(context).primaryColor,
-//                     ),
-//                     child: Text(wcount!=null?wcount.toString():'0',
-//                         style: TextStyle(color: Colors.white, fontSize: 15.0)),
-//                   ),*/
-//                   onTap: () {
-//                     Navigator.of(context).pop();
-
-//                     Navigator.push(
-//                         context,
-//                         MaterialPageRoute(builder: (context) => NewWishList())
-// //                        NewWishList()),
-// //                      Cat_Product
-//                     );
-//                   },
-//                 ),
-
-                /*  ListTile(
-                  leading: Icon(Icons.star_border,
-                      color: AppColors.tela),
-                  title: Text('Rate US',),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    String os = Platform.operatingSystem; //in your code
-                    if (os == 'android') {
-                      final InAppReview inAppReview = InAppReview.instance;
-                      inAppReview.requestReview();
-                    }
-                  },
-                ),*/
-                // ListTile(
-                //   leading: Icon(Icons.analytics_rounded,
-                //       color: AppColors.tela),
-                //   title: Text('Blog'),
-                //   trailing: Text('',
-                //       style: TextStyle(color: Theme.of(context).primaryColor)),
-                //   onTap: () {
-                //     Navigator.of(context).pop();
-                //
-                //     Navigator.push(context, MaterialPageRoute(
-                //         builder: (context) => BlogScreen()),
-                //     );
-                //   },
-                // ),
-                // ListTile(
-                //   leading: Icon(
-                //     Icons.account_balance_wallet_rounded,
-                //     color: GroceryAppColors.tela,
-                //   ),
-                //   title: Text('My Wallet'),
-                //   onTap: () {
-                //     Navigator.of(context).pop();
-                //     if (GroceryAppConstant.isLogin) {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => WalltReport(),
-                //         ),
-                //       );
-                //     } else {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => SignInPage(),
-                //         ),
-                //       );
-                //     }
-                //   },
-                // ),
-                // Divider(),
-                // ListTile(
-                //   leading: Icon(
-                //     Icons.money_sharp,
-                //     color: GroceryAppColors.tela,
-                //   ),
-                //   title: Text('My Earnings'),
-                //   onTap: () {
-                //     Navigator.of(context).pop();
-                //     if (GroceryAppConstant.isLogin) {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => WebViewClass(
-                //             "My Earnings",
-                //             "${GroceryAppConstant.base_url}Api_earnings.php?username=$mobile&shop_id=${GroceryAppConstant.Shop_id}",
-                //           ),
-                //         ),
-                //       );
-                //     } else {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => SignInPage(),
-                //         ),
-                //       );
-                //     }
-                //   },
-                // ),
-                // Divider(),
-                ListTile(
-                  leading: Icon(Icons.phone, color: GroceryAppColors.tela),
-                  title: Text('Contact Us'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WebViewClass(
-                                "Contact Us",
-                                ""
-                                    "${GroceryAppConstant.base_url}contact"))
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                        );
-                  },
-                ),
-                Divider(),
-                ListTile(
-                  leading:
-                      Icon(Icons.privacy_tip, color: GroceryAppColors.tela),
-                  title: Text('Privacy Policy'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WebViewClass(
-                                "Privacy Policy",
-                                ""
-                                    "${GroceryAppConstant.base_url}pp"))
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                        );
-                  },
-                ),
-                 Divider(),
-                ListTile(
-                  leading:
-                      Icon(Icons.privacy_tip, color: GroceryAppColors.tela),
-                  title: Text('Shipping Policy'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WebViewClass(
-                                "Shipping Policy",
-                                ""
-                                    "http://www.oho.w4u.in/cr"))
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                        );
-                  },
-                ),
-                Divider(),
-                ListTile(
-                  leading: Icon(Icons.info, color: GroceryAppColors.tela),
-                  title: Text('About Us'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WebViewClass(
-                                "About Us",
-                                ""
-                                    "${GroceryAppConstant.base_url}about"))
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                        );
-                  },
-                ),
-                Divider(),
-                ListTile(
-                  leading: Icon(Icons.file_copy, color: GroceryAppColors.tela),
-                  title: Text('Terms & Conditions'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WebViewClass(
-                                "Terms & Conditions",
-                                ""
-                                    "${GroceryAppConstant.base_url}tc"))
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                        );
-                  },
-                ),
-                Divider(),
-                /* ListTile(
-                  leading:
-                  Icon(Icons.file_copy, color: AppColors.tela),
-                  title: Text('Terms & Conditions'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewClass("Terms & Conditions","https://www.freshatdoorstep.com/tc"))
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                    );
-                  },
-                ),*/
-                /* ListTile(
-                  leading:
-                  Icon(Icons.question_answer, color: AppColors.tela),
-                  title: Text('FAQ'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewClass("FAQ","https://www.freshatdoorstep.com/faq"))
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                    );
-                  },
-                ),*/
-                ListTile(
-                  leading: Icon(Icons.mobile_screen_share,
-                      color: GroceryAppColors.tela),
-                  title: Text('Share'),
-                  onTap: () {
-                    _shairApp();
-                  },
-                ),
-                Divider(),
-
-                GroceryAppConstant.isLogin
-                    ? new Container()
-                    : ListTile(
-                        leading: Icon(Icons.lock, color: GroceryAppColors.tela),
-                        title: Text('Login'),
+                  if (!GroceryAppConstant.isLogin)
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).pop();
-
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SignInPage()),
                           );
                         },
-                      ),
-                // Divider(),
-//              ListTile(
-//                leading:
-//                    Icon(Icons.settings, color: AppColors.tela),
-//                title: Text('Settings'),
-//                onTap: () {
-//
-//                },
-//              ),
-                /* Constant.isLogin? ListTile(
-                  leading: Icon(Icons.exit_to_app,
-                      color: AppColors.tela),
-                  title: Text('Logout'),
-                  onTap: () async {
-                    _callLogoutData();
-                  },
-                ):new Container()*/
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Container(
-                    height: 130,
-                    width: 150,
-                    decoration: BoxDecoration(
-                        //  color: Colors.red,
-                        image: DecorationImage(
-                            image: AssetImage(
-                              'assets/images/logo.png',
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                GroceryAppColors.tela,
+                                GroceryAppColors.tela1,
+                              ],
                             ),
-                            fit: BoxFit.cover)),
-                    // child: Image.asset(
-                    //   'assets/images/logo.png',
-                    //   //   width: 80,
-                    // ),
-                  ),
-                ),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: GroceryAppColors.tela.withOpacity(0.3),
+                                blurRadius: 12,
+                                offset: Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.login_rounded,
+                                color: Colors.white,
+                                size: 22,
+                              ),
+                              SizedBox(width: 12),
+                              Text(
+                                "Sign In to Continue",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
 
-                SizedBox(
-                  height: 15,
-                ),
-                shopDetails != null ? socialMedia(context) : Row(),
-              ],
+                  // Logo Section
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    height: 100,
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 15,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+
+                  // Social Media
+                  if (shopDetails != null) socialMedia(context),
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
-          )
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Section Header
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(28, 12, 16, 8),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 16,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [GroceryAppColors.tela, GroceryAppColors.tela1],
+              ),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          SizedBox(width: 10),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[700],
+              letterSpacing: 0.5,
+            ),
+          ),
         ],
       ),
     );
@@ -860,56 +780,125 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   Widget socialMedia(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            GroceryAppColors.tela.withOpacity(0.08),
+            GroceryAppColors.tela1.withOpacity(0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: GroceryAppColors.tela.withOpacity(0.15),
+          width: 1,
+        ),
+      ),
+      child: Column(
         children: [
-          InkWell(
-            onTap: () {
-              shopDetails!.mobileNo != null || shopDetails!.mobileNo != ''
-                  ? naviagteToFacebook('tel:+91${shopDetails!.mobileNo}')
-                  : showLongToast('No Mobile Number');
-            },
-            child: socialMediaIcons('assets/images/phone.png'),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [GroceryAppColors.tela, GroceryAppColors.tela1],
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              SizedBox(width: 10),
+              Text(
+                "Connect With Us",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
           ),
-          InkWell(
-            onTap: () {
-              shopDetails!.i != null || shopDetails!.i != ''
-                  ? naviagteToInstagram(shopDetails!.i)
-                  : showLongToast('No Link Available');
-            },
-            child: socialMediaIcons('assets/images/insta.png'),
-          ),
-          // InkWell(
-          //   onTap: () {
-          //     shopDetails!.t != null || shopDetails!.t != ''
-          //         ? naviagteToteligram(shopDetails!.t)
-          //         : showLongToast('No Link Available');
-          //   },
-          //   child: socialMediaIcons('assets/images/teligram.png'),
-          // ),
-          InkWell(
-            onTap: () {
-              shopDetails!.w != null || shopDetails!.w != ''
-                  ? naviagteTotwitter(shopDetails!.w!.startsWith('+')
-                      ? 'https://wa.me/${shopDetails!.w}/?text=Hy '
-                      : shopDetails!.w!.startsWith('91')
-                          ? 'https://wa.me/+${shopDetails!.w}/?text=Hy '
-                          : 'https://wa.me/+91${shopDetails!.w}/?text=Hy ')
-                  : showLongToast('No number Available');
-            },
-            child: socialMediaIcons('assets/images/whatsapp.png'),
-          ),
-          InkWell(
-            onTap: () {
-              shopDetails!.f != null || shopDetails!.f != ''
-                  ? naviagteToYoutube(shopDetails!.f)
-                  : showLongToast('No Link Available');
-            },
-            child: socialMediaIcons('assets/images/facebook.png'),
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              InkWell(
+                onTap: () {
+                  shopDetails!.mobileNo != null || shopDetails!.mobileNo != ''
+                      ? naviagteToFacebook('tel:+91${shopDetails!.mobileNo}')
+                      : showLongToast('No Mobile Number');
+                },
+                child: _buildSocialMediaIcon(
+                  'assets/images/phone.png',
+                  GroceryAppColors.tela,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  shopDetails!.i != null || shopDetails!.i != ''
+                      ? naviagteToInstagram(shopDetails!.i)
+                      : showLongToast('No Link Available');
+                },
+                child: _buildSocialMediaIcon(
+                  'assets/images/insta.png',
+                  GroceryAppColors.tela1,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  shopDetails!.w != null || shopDetails!.w != ''
+                      ? naviagteTotwitter(shopDetails!.w!.startsWith('+')
+                          ? 'https://wa.me/${shopDetails!.w}/?text=Hy '
+                          : shopDetails!.w!.startsWith('91')
+                              ? 'https://wa.me/+${shopDetails!.w}/?text=Hy '
+                              : 'https://wa.me/+91${shopDetails!.w}/?text=Hy ')
+                      : showLongToast('No number Available');
+                },
+                child: _buildSocialMediaIcon(
+                  'assets/images/whatsapp.png',
+                  GroceryAppColors.tela,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  shopDetails!.f != null || shopDetails!.f != ''
+                      ? naviagteToYoutube(shopDetails!.f)
+                      : showLongToast('No Link Available');
+                },
+                child: _buildSocialMediaIcon(
+                  'assets/images/facebook.png',
+                  GroceryAppColors.tela1,
+                ),
+              ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSocialMediaIcon(String imagePath, Color color) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.2),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(14),
+      child: Image.asset(
+        imagePath,
+        fit: BoxFit.contain,
       ),
     );
   }
@@ -956,5 +945,218 @@ class _AppDrawerState extends State<AppDrawer> {
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch $url');
     }
+  }
+
+  // Helper method to build modern list tiles
+  Widget _buildModernListTile({
+    required IconData icon,
+    required String title,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        color.withOpacity(0.15),
+                        color.withOpacity(0.05)
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: color,
+                    size: 22,
+                  ),
+                ),
+                SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: color,
+                    size: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Helper method to build modern expansion tiles
+  Widget _buildModernExpansionTile({
+    required String title,
+    required IconData icon,
+    required Color color,
+    required List<Widget> children,
+  }) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          dividerColor: Colors.transparent,
+          splashColor: color.withOpacity(0.1),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: ExpansionTile(
+            tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            childrenPadding: EdgeInsets.only(bottom: 8),
+            leading: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [color.withOpacity(0.15), color.withOpacity(0.05)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 22,
+              ),
+            ),
+            title: Text(
+              title,
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            iconColor: color,
+            collapsedIconColor: color,
+            children: children,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Helper method to build modern sub list tiles
+  Widget _buildModernSubListTile({
+    required IconData icon,
+    required String title,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(left: 60, right: 16, bottom: 6, top: 2),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            color.withOpacity(0.05),
+            color.withOpacity(0.02),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: color.withOpacity(0.15),
+          width: 1,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: color,
+                    size: 18,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: color.withOpacity(0.6),
+                  size: 12,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

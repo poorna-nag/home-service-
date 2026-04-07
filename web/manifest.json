@@ -1,11 +1,11 @@
 {
-    "name": "aladdinmart",
-    "short_name": "aladdinmart",
+    "name": "Trusted Home Caring",
+    "short_name": "Trusted Home Caring",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Trusted Home Caring services app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

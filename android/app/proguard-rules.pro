@@ -64,4 +64,4 @@
 -keep class * implements com.google.gson.JsonDeserializer
 
 # Keep all model classes (adjust package name as needed)
--keep class com.ohouserapp.model.** { *; }
+-keep class com.homeserviceappbigweltdemoappapp.model.** { *; }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
 class MyOrdertrack extends StatefulWidget {
   String idvalue;
   MyOrdertrack(this.idvalue);
@@ -15,7 +17,7 @@ class _MyOrdertrackState extends State<MyOrdertrack> {
   PullToRefreshController? pullToRefreshController;
 
   late ContextMenu contextMenu;
-    final GlobalKey webViewKey = GlobalKey();
+  final GlobalKey webViewKey = GlobalKey();
   double progress = 0;
 
   final urlController = TextEditingController();
@@ -23,75 +25,69 @@ class _MyOrdertrackState extends State<MyOrdertrack> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
-        backgroundColor:Colors.teal[50],
-
+        backgroundColor: FoodAppColors.tela, // Blue theme
         leading: IconButton(
-            color: Colors.black,
+            color: Colors.white,
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(context);
             }),
         title: Text(
           "My Booking",
-          style: TextStyle(color: Colors.black, fontSize: 20),
+          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
-      body:Column(children: [
+      body: Column(children: [
         Expanded(
-                child: Stack(
-                  children: [
-                    InAppWebView(
-                      key: webViewKey,
-                      initialUrlRequest: URLRequest(url: WebUri('https://shiprocket.co/tracking/'+widget.idvalue)),
-                      // initialUrlRequest:
-                      // URLRequest(url: WebUri(Uri.base.toString().replaceFirst("/#/", "/") + 'page.html')),
-                      // initialFile: "assets/index.html",
-
-                      // contextMenu: contextMenu,
-                      pullToRefreshController: pullToRefreshController,
-                      onWebViewCreated: (controller) async {
-                        webViewController = controller;
-                        print(await controller.getUrl());
-                      },
-                      onLoadStart: (controller, url) async {
-                        setState(() {
-                          this.widget.idvalue = url.toString();
-                          urlController.text = widget.idvalue;
-                        });
-                      },
-
-                      onLoadStop: (controller, url) async {
-                        setState(() {
-                          this.widget.idvalue = url.toString();
-                          urlController.text = this.widget.idvalue;
-                        });
-                      },
-
-                      onProgressChanged: (controller, progress) {
-                        if (progress == 100) {
-                          pullToRefreshController?.endRefreshing();
-                        }
-                        setState(() {
-                          this.progress = progress / 100;
-                          urlController.text = this.widget.idvalue;
-                        });
-                      },
-                      onUpdateVisitedHistory: (controller, url, isReload) {
-                        setState(() {
-                          this.widget.idvalue = url.toString();
-                          urlController.text = this.widget.idvalue;
-                        });
-                      },
-                      onConsoleMessage: (controller, consoleMessage) {
-                        print(consoleMessage);
-                      },
-                    ),
-                  ],
-                ),
+          child: Stack(
+            children: [
+              InAppWebView(
+                key: webViewKey,
+                initialUrlRequest: URLRequest(
+                    url: WebUri(
+                        'https://shiprocket.co/tracking/' + widget.idvalue)),
+                pullToRefreshController: pullToRefreshController,
+                onWebViewCreated: (controller) async {
+                  webViewController = controller;
+                  print(await controller.getUrl());
+                },
+                onLoadStart: (controller, url) async {
+                  setState(() {
+                    this.widget.idvalue = url.toString();
+                    urlController.text = widget.idvalue;
+                  });
+                },
+                onLoadStop: (controller, url) async {
+                  setState(() {
+                    this.widget.idvalue = url.toString();
+                    urlController.text = this.widget.idvalue;
+                  });
+                },
+                onProgressChanged: (controller, progress) {
+                  if (progress == 100) {
+                    pullToRefreshController?.endRefreshing();
+                  }
+                  setState(() {
+                    this.progress = progress / 100;
+                    urlController.text = this.widget.idvalue;
+                  });
+                },
+                onUpdateVisitedHistory: (controller, url, isReload) {
+                  setState(() {
+                    this.widget.idvalue = url.toString();
+                    urlController.text = this.widget.idvalue;
+                  });
+                },
+                onConsoleMessage: (controller, consoleMessage) {
+                  print(consoleMessage);
+                },
               ),
-      ],));
+            ],
+          ),
+        ),
+      ]),
+    );
   }
 }
 

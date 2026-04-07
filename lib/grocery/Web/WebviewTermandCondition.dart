@@ -1,9 +1,7 @@
-import 'dart:ui';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'dart:async';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
 
 class WebViewClass extends StatefulWidget {
   final String title;
@@ -87,7 +85,7 @@ class _WebViewClassState extends State<WebViewClass> {
                         setState(() {
                           this.widget.url = url.toString();
                           urlController.text = this.widget.url;
-                           isLoading=false;
+                          isLoading = false;
                         });
                       },
 
@@ -125,41 +123,3 @@ class _WebViewClassState extends State<WebViewClass> {
     );
   }
 }
-
-/*
-class WebViewState extends State<WebViewScreen>{
-
-  String title,url;
-  bool isLoading=true;
-  final _key = UniqueKey();
-
-  WebViewState(String title,String url){
-    this.title=title;
-    this.url=url;
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: new AppBar(
-          title: Text(this.title,style: TextStyle(fontWeight: FontWeight.w700)),centerTitle: true
-      ),
-      body: Stack(
-        children: <Widget>[
-          WebView(
-            key: _key,
-            initialUrl: this.url,
-            javascriptMode: JavascriptMode.unrestricted,
-            onPageFinished: (finish) {
-              setState(() {
-                isLoading = false;
-              });
-            },
-          ),
-          isLoading ? Center( child: CircularProgressIndicator(),)
-              : Stack(),
-        ],
-      ),
-    );
-  }
-
-}*/

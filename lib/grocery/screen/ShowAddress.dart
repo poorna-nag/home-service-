@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/dbhelper/database_helper.dart';
-import 'package:aladdinmart/grocery/model/AddressModel.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/dbhelper/database_helper.dart';
+import 'package:EcoShine24/grocery/model/AddressModel.dart';
 import 'package:http/http.dart' as http;
-import 'package:aladdinmart/grocery/model/RegisterModel.dart';
-import 'package:aladdinmart/grocery/screen/checkout.dart';
+import 'package:EcoShine24/grocery/model/RegisterModel.dart';
+import 'package:EcoShine24/grocery/screen/checkout.dart';
+import 'package:EcoShine24/grocery/General/Home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AddAddress.dart';
@@ -46,13 +47,23 @@ class _ShowAddressState extends State<ShowAddress> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        elevation: 10,
-        backgroundColor: GroceryAppColors.tela,
-        child: Center(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 32,
+        elevation: 8,
+        backgroundColor: GroceryAppColors.boxColor1,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [GroceryAppColors.boxColor1, GroceryAppColors.boxColor2],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Icon(
+              Icons.add,
+              color: GroceryAppColors.white,
+              size: 28,
+            ),
           ),
         ),
         onPressed: () {
@@ -63,29 +74,61 @@ class _ShowAddressState extends State<ShowAddress> {
         },
       ),
       appBar: AppBar(
-        backgroundColor: GroceryAppColors.tela,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [GroceryAppColors.boxColor1, GroceryAppColors.boxColor2],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-            color: Colors.white,
-            icon: Icon(Icons.arrow_back),
+            color: GroceryAppColors.white,
+            icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
-              Navigator.pop(context);
+              // Navigate back to home screen to avoid black screen
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => GroceryApp()),
+                (route) => false,
+              );
             }),
         title: Text(
           "My Address",
           maxLines: 2,
-          style: TextStyle(color: Colors.white, fontSize: 15),
+          style: TextStyle(
+            color: GroceryAppColors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body:
           // _status?screen():
           Container(
+        decoration: BoxDecoration(
+          color: GroceryAppColors.bg,
+        ),
         child: isloading
             ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(GroceryAppColors.boxColor1),
+                ),
               )
             : add.isEmpty
                 ? Center(
-                    child: Text('No Address Found!....'),
+                    child: Text(
+                      'No Address Found!....',
+                      style: TextStyle(
+                        color: GroceryAppColors.boxColor1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   )
                 : add.length > 0
                     ? ListView.builder(
@@ -104,66 +147,130 @@ class _ShowAddressState extends State<ShowAddress> {
                               } else {}
                             },
                             child: Container(
-                              margin: EdgeInsets.only(top: 10),
+                              margin:
+                                  EdgeInsets.only(top: 10, left: 10, right: 10),
                               width: MediaQuery.of(context).size.width,
                               child: Card(
-                                elevation: 5.0,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    add[index].label != null
-                                        ? Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 10, top: 6, right: 10),
-                                            child: Row(
+                                elevation: 8.0,
+                                shadowColor:
+                                    GroceryAppColors.boxColor1.withOpacity(0.3),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        GroceryAppColors.white,
+                                        GroceryAppColors.bg
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    border: Border.all(
+                                      color: GroceryAppColors.boxColor1
+                                          .withOpacity(0.2),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      add[index].label != null
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 10, top: 6, right: 10),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  add[index].fullName != null
+                                                      ? Text(
+                                                          add[index].fullName !=
+                                                                  null
+                                                              ? add[index]
+                                                                  .fullName!
+                                                              : "",
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  GroceryAppColors
+                                                                      .boxColor1,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                        )
+                                                      : SizedBox(),
+                                                  Text(
+                                                    add[index].label != null
+                                                        ? add[index].label ?? ""
+                                                        : "",
+                                                    style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: GroceryAppColors
+                                                            .boxColor2,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(),
+
+                                      add[index].address1!.length > 1
+                                          ? Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.start,
                                               children: <Widget>[
-                                                add[index].fullName != null
-                                                    ? Text(
-                                                        add[index].fullName !=
-                                                                null
-                                                            ? add[index]
-                                                                .fullName!
-                                                            : "",
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w800),
-                                                      )
-                                                    : SizedBox(),
-                                                Text(
-                                                  add[index].label != null
-                                                      ? add[index].label ?? ""
-                                                      : "",
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 10, top: 5),
+                                                    child: Text(
+                                                      add[index].address1 !=
+                                                              null
+                                                          ? add[index]
+                                                                  .address1 ??
+                                                              ""
+                                                          : "",
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: GroceryAppColors
+                                                            .boxColor1
+                                                            .withOpacity(0.8),
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ],
+                                            )
+                                          : Container(
+                                              height: 0,
                                             ),
-                                          )
-                                        : SizedBox(),
 
-                                    add[index].address1!.length > 1
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Padding(
+                                      add[index].mobile!.length > 1
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 10, top: 5),
                                                   child: Text(
-                                                    add[index].address1 != null
-                                                        ? add[index].address1 ??
-                                                            ""
+                                                    add[index].mobile != null
+                                                        ? add[index]
+                                                                .mobile
+                                                                .toString() +
+                                                            ',' +
+                                                            add[index]
+                                                                .email
+                                                                .toString()
                                                         : "",
                                                     style: TextStyle(
                                                       fontSize: 12,
@@ -171,40 +278,9 @@ class _ShowAddressState extends State<ShowAddress> {
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          )
-                                        : Container(
-                                            height: 0,
-                                          ),
-
-                                    add[index].mobile!.length > 1
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 10, top: 5),
-                                                child: Text(
-                                                  add[index].mobile != null
-                                                      ? add[index]
-                                                              .mobile
-                                                              .toString() +
-                                                          ',' +
-                                                          add[index]
-                                                              .email
-                                                              .toString()
-                                                      : "",
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Row(),
+                                              ],
+                                            )
+                                          : Row(),
 
 //                             add[index].city != null
 //                                 ? Row(
@@ -241,153 +317,159 @@ class _ShowAddressState extends State<ShowAddress> {
 //                             setContainer("Mobile No", add[index].mobile ?? ""),
 //                             setContainer("Email Id", add[index].email ?? ""),
 
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          left: 10, top: 2, right: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Row(
-                                            children: [
-                                              Padding(
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: 10, top: 2, right: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Row(
+                                              children: [
+                                                Padding(
+                                                    padding:
+                                                        EdgeInsets.all(2.0),
+                                                    child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          elevation: 0,
+                                                          backgroundColor:
+                                                              GroceryAppColors
+                                                                  .white,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0),
+                                                          ),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    UpDateAddress(
+                                                                        add[
+                                                                            index],
+                                                                        widget
+                                                                            .valu)),
+                                                          );
+                                                        },
+//              splashColor: AppColors.tela,
+
+                                                        child: Icon(Icons.edit)
+
+                                                        //  Text(
+                                                        //   "Update",
+                                                        //   style: TextStyle(
+                                                        //     fontSize: 12,
+                                                        //     color: Colors.white,
+                                                        //   ),
+                                                        // ),
+                                                        )),
+                                                Padding(
                                                   padding: EdgeInsets.all(2.0),
                                                   child: ElevatedButton(
                                                       style: ElevatedButton
                                                           .styleFrom(
                                                         elevation: 0,
                                                         backgroundColor:
-                                                            GroceryAppColors
-                                                                .white,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      20.0),
-                                                        ),
+                                                            Colors.white,
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0)),
                                                       ),
                                                       onPressed: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  UpDateAddress(
-                                                                      add[
-                                                                          index],
-                                                                      widget
-                                                                          .valu)),
-                                                        );
+                                                        print("Delete");
+                                                        showDilogueReviw(
+                                                            context, index);
                                                       },
-//              splashColor: AppColors.tela,
-
-                                                      child: Icon(Icons.edit)
-
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        color: Colors.red,
+                                                      )
                                                       //  Text(
-                                                      //   "Update",
+                                                      //   "Delete",
                                                       //   style: TextStyle(
                                                       //     fontSize: 12,
                                                       //     color: Colors.white,
                                                       //   ),
                                                       // ),
-                                                      )),
-                                              Padding(
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
                                                 padding: EdgeInsets.all(2.0),
                                                 child: ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      elevation: 0,
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20.0)),
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    elevation: 0,
+                                                    backgroundColor:
+                                                        GroceryAppColors.tela,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
                                                     ),
-                                                    onPressed: () {
-                                                      print("Delete");
-                                                      showDilogueReviw(
-                                                          context, index);
-                                                    },
-                                                    child: Icon(
-                                                      Icons.delete,
-                                                      color: Colors.red,
-                                                    )
-                                                    //  Text(
-                                                    //   "Delete",
-                                                    //   style: TextStyle(
-                                                    //     fontSize: 12,
-                                                    //     color: Colors.white,
-                                                    //   ),
-                                                    // ),
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                          Padding(
-                                              padding: EdgeInsets.all(2.0),
-                                              child: ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  elevation: 0,
-                                                  backgroundColor:
-                                                      GroceryAppColors.tela,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20.0),
                                                   ),
-                                                ),
-                                                onPressed: () {
-                                                  if (GroceryAppConstant
-                                                              .latitude <=
-                                                          0 ||
+                                                  onPressed: () {
+                                                    // Prefer lat/lng from the selected address when available
+                                                    final selected = add[index];
+                                                    final selectedLat =
+                                                        double.tryParse(
+                                                            selected.lat ?? '');
+                                                    final selectedLng =
+                                                        double.tryParse(
+                                                            selected.lng ?? '');
+
+                                                    if (selectedLat != null &&
+                                                        selectedLng != null) {
                                                       GroceryAppConstant
-                                                              .longitude <=
-                                                          0 ||
+                                                              .latitude =
+                                                          selectedLat;
                                                       GroceryAppConstant
-                                                          .latitude
-                                                          .toString()
-                                                          .startsWith('0') ||
-                                                      GroceryAppConstant
-                                                          .longitude
-                                                          .toString()
-                                                          .startsWith('0')) {
-                                                    showLongToast(
-                                                        'Please Select Currect Address');
-                                                  } else {
+                                                              .longitude =
+                                                          selectedLng;
+                                                    }
+
+                                                    // Always proceed to checkout with the selected address
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              CheckOutPage(
-                                                                  add[index])),
+                                                        builder: (context) =>
+                                                            CheckOutPage(
+                                                                selected),
+                                                      ),
                                                     );
-                                                 }
-                                                },
-                                                child: Text(
-                                                  'Continue this address >>',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
+                                                  },
+                                                  child: Text(
+                                                    'Continue >>',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
 
-                                                //  Text(
-                                                //   "Next",
-                                                //   style: TextStyle(
-                                                //     fontSize: 12,
-                                                //     color: Colors.white,
-                                                //   ),
-                                                // ),
-                                              )),
-                                        ],
-                                      ),
-                                    )
+                                                  //  Text(
+                                                  //   "Next",
+                                                  //   style: TextStyle(
+                                                  //     fontSize: 12,
+                                                  //     color: Colors.white,
+                                                  //   ),
+                                                  // ),
+                                                )),
+                                          ],
+                                        ),
+                                      )
 //                  getAction(context,index),
 //                  setContainer("City",add[index].city),
 //                  setContainer("State",add[index].state),
 //                  setContainer("Pin",add[index].pincode),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -408,10 +490,13 @@ class _ShowAddressState extends State<ShowAddress> {
               padding: EdgeInsets.all(2.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: GroceryAppColors.teladep,
+                  backgroundColor: GroceryAppColors.boxColor1,
+                  foregroundColor: GroceryAppColors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(25.0),
                   ),
+                  elevation: 4,
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 ),
 
                 onPressed: () {
@@ -428,8 +513,9 @@ class _ShowAddressState extends State<ShowAddress> {
                 child: Text(
                   "Update",
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
+                    fontSize: 14,
+                    color: GroceryAppColors.white,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               )),
@@ -437,9 +523,12 @@ class _ShowAddressState extends State<ShowAddress> {
             padding: EdgeInsets.all(2.0),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: Colors.red.shade600,
+                foregroundColor: GroceryAppColors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
+                    borderRadius: BorderRadius.circular(25.0)),
+                elevation: 4,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
               onPressed: () {
 //                _deleteAdderss(add[index].addId);
@@ -449,8 +538,9 @@ class _ShowAddressState extends State<ShowAddress> {
               child: Text(
                 "Delete",
                 style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.white,
+                  fontSize: 14,
+                  color: GroceryAppColors.white,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -469,17 +559,17 @@ class _ShowAddressState extends State<ShowAddress> {
           Padding(
             padding: EdgeInsets.all(2.0),
             child: Text(
-              title != null ? title + ':' : "",
+              title + ':',
               style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
+                  fontSize: 13,
+                  color: GroceryAppColors.boxColor1,
+                  fontWeight: FontWeight.w600),
             ),
           ),
           Padding(
             padding: EdgeInsets.all(2.0),
             child: Text(
-              value != null ? value : "",
+              value,
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.black,

@@ -1,19 +1,14 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
-import 'package:aladdinmart/dbhelper/database_helper.dart';
-import 'package:aladdinmart/grocery/dbhelper/database_helper.dart';
-import 'package:aladdinmart/grocery/screen/productlist.dart';
-import 'package:aladdinmart/model/ListModel.dart';
-import 'package:aladdinmart/screen/MvProduct.dart';
-import 'package:aladdinmart/utils/dimensions.dart';
-import 'package:aladdinmart/utils/styles.dart';
-
-import 'SubCategry.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
+import 'package:EcoShine24/dbhelper/database_helper.dart';
+import 'package:EcoShine24/grocery/dbhelper/database_helper.dart';
+import 'package:EcoShine24/model/ListModel.dart';
+import 'package:EcoShine24/utils/dimensions.dart';
+import 'package:EcoShine24/utils/styles.dart';
 
 class QRCodeScanner extends StatefulWidget {
   final Function? changeView;
@@ -46,7 +41,7 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
       context,
       MaterialPageRoute(builder: (context) => BarcodeScannerScreen()),
     );
-    
+
     if (result != null && result != "-1") {
       log(result.toString());
       setState(() {
@@ -205,19 +200,19 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                             onTap: () {
                               // Navigator.push(
                               //   context,
-                                // MaterialPageRoute(
-                                //     builder: (context) => MV_products(
-                                //         shoplist[index].company ?? "",
-                                //         shoplist[index].mvId ?? "",
-                                //         "")
+                              // MaterialPageRoute(
+                              //     builder: (context) => MV_products(
+                              //         shoplist[index].company ?? "",
+                              //         shoplist[index].mvId ?? "",
+                              //         "")
 
-                                    // Sbcategory(
-                                    //     shoplist[index].company,
-                                    //     shoplist[index].mvId,
-                                    //     shoplist[index].cat)
+                              // Sbcategory(
+                              //     shoplist[index].company,
+                              //     shoplist[index].mvId,
+                              //     shoplist[index].cat)
 
-                                   // ),
-                             // );
+                              // ),
+                              // );
                             },
                             child: Container(
                               height: 230,
@@ -258,7 +253,9 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                                                   : CachedNetworkImage(
                                                       imageUrl: FoodAppConstant
                                                               .logo_Image_mv +
-                                                          shoplist[index].pp.toString(),
+                                                          shoplist[index]
+                                                              .pp
+                                                              .toString(),
                                                       height: 160,
                                                       width:
                                                           MediaQuery.of(context)
@@ -321,12 +318,14 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                                                 children: [
                                                   RatingBar.builder(
                                                     initialRating: (double
-                                                            .parse(
-                                                                shoplist[index]
-                                                                    .reviews1??"") /
+                                                            .parse(shoplist[
+                                                                        index]
+                                                                    .reviews1 ??
+                                                                "") /
                                                         double.parse(shoplist[
-                                                                index]
-                                                            .reviews_total??"")),
+                                                                    index]
+                                                                .reviews_total ??
+                                                            "")),
                                                     minRating: 0,
                                                     itemSize: 15,
                                                     direction: Axis.horizontal,
@@ -339,13 +338,16 @@ class _QRCodeScannerState extends State<QRCodeScanner> {
                                                         Icon(
                                                       Icons.star,
                                                       color: double.parse(shoplist[
-                                                                      index]
-                                                                  .reviews_total??"") >
+                                                                          index]
+                                                                      .reviews_total ??
+                                                                  "") >
                                                               0
                                                           ? FoodAppColors.tela
                                                           : Colors.grey,
                                                       size: 5,
-                                                    ), onRatingUpdate: (double value) {  },
+                                                    ),
+                                                    onRatingUpdate:
+                                                        (double value) {},
                                                     /* onRatingUpdate: (rating) {
                                                             // _ratingController=rating;
                                                             print(rating);
@@ -382,6 +384,8 @@ class BarcodeScannerScreen extends StatefulWidget {
 
 class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   MobileScannerController cameraController = MobileScannerController();
+  bool isTorchOn = false;
+  bool isFrontCamera = false;
 
   @override
   Widget build(BuildContext context) {
@@ -391,35 +395,31 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
         actions: [
           IconButton(
             color: Colors.white,
-            icon: ValueListenableBuilder(
-              valueListenable: cameraController.torchEnabled,
-              builder: (context, state, child) {
-                switch (state as bool) {
-                  case true:
-                    return const Icon(Icons.flash_on, color: Colors.yellow);
-                  case false:
-                    return const Icon(Icons.flash_off);
-                }
-              },
+            icon: Icon(
+              isTorchOn ? Icons.flash_on : Icons.flash_off,
+              color: isTorchOn ? Colors.yellow : Colors.white,
             ),
             iconSize: 32.0,
-            onPressed: () => cameraController.toggleTorch(),
+            onPressed: () {
+              cameraController.toggleTorch();
+              setState(() {
+                isTorchOn = !isTorchOn;
+              });
+            },
           ),
           IconButton(
             color: Colors.white,
-            icon: ValueListenableBuilder(
-              valueListenable: cameraController.cameraFacingState,
-              builder: (context, state, child) {
-                switch (state as CameraFacing) {
-                  case CameraFacing.front:
-                    return const Icon(Icons.camera_front);
-                  case CameraFacing.back:
-                    return const Icon(Icons.camera_rear);
-                }
-              },
+            icon: Icon(
+              isFrontCamera ? Icons.camera_front : Icons.camera_rear,
+              color: Colors.white,
             ),
             iconSize: 32.0,
-            onPressed: () => cameraController.switchCamera(),
+            onPressed: () {
+              cameraController.switchCamera();
+              setState(() {
+                isFrontCamera = !isFrontCamera;
+              });
+            },
           ),
         ],
       ),

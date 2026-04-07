@@ -4,13 +4,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
-import 'package:aladdinmart/dbhelper/database_helper.dart';
-import 'package:aladdinmart/model/CancleandRefundmodel.dart';
-import 'package:aladdinmart/model/InvoiceTrackmodel.dart';
-import 'package:aladdinmart/screen/shopreviewrating.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
+import 'package:EcoShine24/dbhelper/database_helper.dart';
+import 'package:EcoShine24/model/CancleandRefundmodel.dart';
+import 'package:EcoShine24/model/InvoiceTrackmodel.dart';
 import 'package:http/http.dart' as http;
-import 'package:aladdinmart/screen/myorder.dart';
+import 'package:EcoShine24/screen/myorder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FinalOrderTracker extends StatelessWidget {
@@ -212,7 +211,8 @@ class FinalOrderTracker extends StatelessWidget {
                                                             style: TextStyle(
                                                               color: Theme.of(
                                                                       context)
-                                                                  .colorScheme.secondary,
+                                                                  .colorScheme
+                                                                  .secondary,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w700,
@@ -226,7 +226,7 @@ class FinalOrderTracker extends StatelessWidget {
                                                                       .styleFrom(
                                                                     backgroundColor:
                                                                         FoodAppColors
-                                                                            .red,
+                                                                            .tela,
                                                                     padding: EdgeInsets.only(
                                                                         left:
                                                                             10,
@@ -246,8 +246,8 @@ class FinalOrderTracker extends StatelessWidget {
                                                                   child: Text(
                                                                     "Review",
                                                                     style: TextStyle(
-                                                                        color: Colors
-                                                                            .black,
+                                                                        color: FoodAppColors
+                                                                            .white,
                                                                         fontWeight:
                                                                             FontWeight.bold),
                                                                   ),
@@ -470,6 +470,7 @@ class FinalOrderTracker extends StatelessWidget {
                             value.isEmpty && value.length > 10) {
                           return "  Enter the reason";
                         }
+                        return null;
                       },
                       decoration: new InputDecoration(
                         hintText: 'Reason',
@@ -587,6 +588,7 @@ class FinalOrderTracker extends StatelessWidget {
                             value.isEmpty && value.length > 10) {
                           return "write a review";
                         }
+                        return null;
                       },
                       decoration: new InputDecoration(
                         hintText: 'review',

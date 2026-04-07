@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "aladdinmart" "\0"
+            VALUE "FileDescription", "Trusted Home Caring" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "aladdinmart" "\0"
+            VALUE "InternalName", "trusted_home_caring" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "aladdinmart.exe" "\0"
-            VALUE "ProductName", "aladdinmart" "\0"
+            VALUE "OriginalFilename", "trusted_home_caring.exe" "\0"
+            VALUE "ProductName", "Trusted Home Caring" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

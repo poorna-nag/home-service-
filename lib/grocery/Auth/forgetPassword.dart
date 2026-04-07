@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:aladdinmart/grocery/Auth/signin.dart';
-import 'package:aladdinmart/grocery/Auth/widgets/custom_shape.dart';
-import 'package:aladdinmart/grocery/Auth/widgets/customappbar.dart';
-import 'package:aladdinmart/grocery/Auth/widgets/register.dart';
-import 'package:aladdinmart/grocery/Auth/widgets/responsive_ui.dart';
-import 'package:aladdinmart/grocery/Auth/widgets/textformfield.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/model/RegisterModel.dart';
+import 'package:EcoShine24/grocery/Auth/signin.dart';
+import 'package:EcoShine24/grocery/Auth/widgets/custom_shape.dart';
+import 'package:EcoShine24/grocery/Auth/widgets/customappbar.dart';
+import 'package:EcoShine24/grocery/Auth/widgets/register.dart';
+import 'package:EcoShine24/grocery/Auth/widgets/responsive_ui.dart';
+import 'package:EcoShine24/grocery/Auth/widgets/textformfield.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/model/RegisterModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgetPass extends StatelessWidget {
@@ -119,8 +119,8 @@ class _SignInScreenState extends State<ForgetPassword> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    GroceryAppColors.boxColor1,
-                    GroceryAppColors.boxColor2
+                    Color(0xFF004AAD), // Professional dark blue
+                    Color(0xFF0066CC), // Professional medium blue
                   ],
                 ),
               ),
@@ -138,8 +138,8 @@ class _SignInScreenState extends State<ForgetPassword> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    GroceryAppColors.boxColor1,
-                    GroceryAppColors.boxColor2
+                    Color(0xFF004AAD), // Professional dark blue
+                    Color(0xFF0066CC), // Professional medium blue
                   ],
                 ),
               ),
@@ -255,7 +255,7 @@ class _SignInScreenState extends State<ForgetPassword> {
               "Recover",
               style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: GroceryAppColors.boxColor1),
+                  color: Color(0xFF004AAD)), // Professional dark blue
             ),
           )
         ],
@@ -298,8 +298,8 @@ class _SignInScreenState extends State<ForgetPassword> {
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           gradient: LinearGradient(
             colors: <Color>[
-              GroceryAppColors.boxColor1,
-              GroceryAppColors.boxColor2
+              Color(0xFF004AAD), // Professional dark blue
+              Color(0xFF0066CC), // Professional medium blue
             ],
           ),
         ),
@@ -336,7 +336,7 @@ class _SignInScreenState extends State<ForgetPassword> {
               "Sign up",
               style: TextStyle(
                   fontWeight: FontWeight.w800,
-                  color: GroceryAppColors.boxColor1,
+                  color: Color(0xFF004AAD), // Professional dark blue
                   fontSize: _large ? 19 : (_medium ? 17 : 15)),
             ),
           )

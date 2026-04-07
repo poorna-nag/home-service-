@@ -1,14 +1,12 @@
 import 'dart:developer';
 
-import 'package:aladdinmart/screen/tracking.dart';
+import 'package:EcoShine24/screen/tracking.dart';
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
-import 'package:aladdinmart/StyleDecoration/styleDecoration.dart';
-import 'package:aladdinmart/dbhelper/database_helper.dart';
-import 'package:aladdinmart/map/mainScreen.dart';
-import 'package:aladdinmart/model/TrackInvoiceModel.dart';
-import 'package:aladdinmart/screen/Finaltracking.dart';
-import 'package:aladdinmart/screen/trackorder.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
+import 'package:EcoShine24/StyleDecoration/styleDecoration.dart';
+import 'package:EcoShine24/dbhelper/database_helper.dart';
+import 'package:EcoShine24/model/TrackInvoiceModel.dart';
+import 'package:EcoShine24/screen/Finaltracking.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TrackOrder extends StatefulWidget {
@@ -169,8 +167,8 @@ class _TrackOrderState extends State<TrackOrder> {
                                                       .textFormFieldSemiBold
                                                       .copyWith(
                                                           fontSize: 15,
-                                                          color: Colors
-                                                              .deepOrangeAccent),
+                                                          color: FoodAppColors
+                                                              .tela),
                                                 ),
                                               ),
                                             ],

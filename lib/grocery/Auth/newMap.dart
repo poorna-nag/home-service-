@@ -1,9 +1,9 @@
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapClass extends StatefulWidget {
@@ -88,6 +88,7 @@ class _MapClassState extends State<MapClass> {
             'images/destination_map_marker.png')
         .then((d) {
       customIcon = d;
+      return null;
     });
   }
 

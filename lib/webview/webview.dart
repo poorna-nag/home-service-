@@ -114,7 +114,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WebViewClass extends StatefulWidget {
@@ -186,11 +186,11 @@ class _WebViewClassState extends State<WebViewClass> {
                 Expanded(
                   child: InAppWebView(
                     key: webViewKey,
-                    initialUrlRequest: URLRequest(url: Uri.parse(widget.url)),
+                    initialUrlRequest: URLRequest(url: WebUri(widget.url)),
                     // initialUrlRequest:
                     // URLRequest(url: WebUri(Uri.base.toString().replaceFirst("/#/", "/") + 'page.html')),
                     // initialFile: "assets/index.html",
-          
+
                     // contextMenu: contextMenu,
                     pullToRefreshController: pullToRefreshController,
                     onWebViewCreated: (controller) async {
@@ -203,15 +203,15 @@ class _WebViewClassState extends State<WebViewClass> {
                         urlController.text = widget.url;
                       });
                     },
-          
+
                     onLoadStop: (controller, url) async {
                       setState(() {
                         this.url = url.toString();
                         urlController.text = this.url;
-                        isLoading=false;
+                        isLoading = false;
                       });
                     },
-          
+
                     onProgressChanged: (controller, progress) {
                       if (progress == 100) {
                         pullToRefreshController?.endRefreshing();
@@ -234,15 +234,14 @@ class _WebViewClassState extends State<WebViewClass> {
                 ),
               ],
             ),
-          ),  isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Stack(),
-          
+          ),
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Stack(),
         ],
       ),
-      
     );
   }
 

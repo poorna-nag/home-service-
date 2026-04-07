@@ -1,11 +1,10 @@
-import 'package:aladdinmart/grocery/screen/detailpage1.dart';
+import 'package:EcoShine24/grocery/screen/detailpage1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
-import 'package:aladdinmart/StyleDecoration/styleDecoration.dart';
-import 'package:aladdinmart/dbhelper/database_helper.dart';
-import 'package:aladdinmart/model/MyReviewModel.dart';
-import 'package:aladdinmart/screen/detailpage1.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
+import 'package:EcoShine24/StyleDecoration/styleDecoration.dart';
+import 'package:EcoShine24/dbhelper/database_helper.dart';
+import 'package:EcoShine24/model/MyReviewModel.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,17 +37,18 @@ class _TrackOrderState extends State<MyReview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: FoodAppColors.tela1,
       appBar: AppBar(
         backgroundColor: FoodAppColors.tela,
         leading: IconButton(
-            color: Colors.white,
+            color: FoodAppColors.white,
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(context);
             }),
         title: Text(
           "My Review",
-          style: TextStyle(color: Colors.white, fontSize: 24),
+          style: TextStyle(color: FoodAppColors.white, fontSize: 24),
         ),
       ),
       body: FutureBuilder(
@@ -75,6 +75,7 @@ class _TrackOrderState extends State<MyReview> {
                           ),
                           child: Card(
                             elevation: 0,
+                            color: FoodAppColors.tela1,
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(4))),
@@ -108,7 +109,7 @@ class _TrackOrderState extends State<MyReview> {
                                               .textFormFieldMedium
                                               .copyWith(
                                                   fontSize: 18,
-                                                  color: Colors.black,
+                                                  color: FoodAppColors.tela,
                                                   fontWeight: FontWeight.w600),
                                         ),
                                       ],
@@ -212,7 +213,7 @@ class _TrackOrderState extends State<MyReview> {
                                                 .textFormFieldSemiBold
                                                 .copyWith(
                                                     fontSize: 15,
-                                                    color: Colors.black54),
+                                                    color: FoodAppColors.tela),
                                           ),
                                         ),
                                       ],

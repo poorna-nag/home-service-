@@ -1,6 +1,6 @@
-import 'package:aladdinmart/grocery/General/Home.dart';
+import 'package:EcoShine24/grocery/General/Home.dart';
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
 
 class ShowInVoiceId1 extends StatefulWidget {
   final String invoice;
@@ -51,11 +51,12 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              color: Colors.teal[50],
+              color: FoodAppColors.tela1, // Blue accent background
             ),
             child: Center(
               child: Container(
                 child: Card(
+                  color: FoodAppColors.tela, // Blue theme for card
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -78,7 +79,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 15,
-                                color: Colors.black,
+                                color: Colors.white, // Blue theme text
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -108,7 +109,8 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             style: TextStyle(
-                                              color: Colors.green,
+                                              color: FoodAppColors
+                                                  .tela, // Blue theme
                                               fontWeight: FontWeight.w700,
                                             )),
                                       ),
@@ -132,7 +134,8 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontStyle: FontStyle.normal,
-                                          color: Colors.black,
+                                          color:
+                                              Colors.white, // Blue theme text
                                         ),
                                       ),
                                     ),
@@ -150,7 +153,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
-                                          color: Colors.black),
+                                          color: FoodAppColors.tela),
                                     ),
                                   ),
                                   Padding(
@@ -158,7 +161,8 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                     child: Text(
                                       "8105222216",
                                       style: TextStyle(
-                                          fontSize: 20, color: Colors.black),
+                                          fontSize: 20,
+                                          color: FoodAppColors.tela),
                                     ),
                                   ),
                                 ],
@@ -174,7 +178,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
-                                          color: Colors.black),
+                                          color: FoodAppColors.tela),
                                     ),
                                   ),
                                   Padding(
@@ -182,7 +186,8 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                     child: Text(
                                       "8105222216",
                                       style: TextStyle(
-                                          fontSize: 20, color: Colors.black),
+                                          fontSize: 20,
+                                          color: FoodAppColors.tela),
                                     ),
                                   ),
                                 ],
@@ -194,7 +199,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                 padding: EdgeInsets.only(top: 10, bottom: 10),
                                 decoration: new BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
-                                    color: FoodAppColors.green),
+                                    color: FoodAppColors.tela),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[

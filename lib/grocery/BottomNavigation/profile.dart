@@ -1,23 +1,19 @@
 import 'dart:io';
 
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/Web/WebviewTermandCondition.dart';
-import 'package:aladdinmart/screen/wallecttransation.dart';
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/Animation/FadeAnimation.dart';
-import 'package:aladdinmart/Auth/signin.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/screen/changePassword.dart';
-import 'package:aladdinmart/screen/MyReview.dart';
-import 'package:aladdinmart/screen/ShowAddress.dart';
-import 'package:aladdinmart/screen/editprofile.dart';
-import 'package:aladdinmart/screen/myorder.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/Auth/signin.dart';
+import 'package:EcoShine24/grocery/screen/editprofile.dart';
+import 'package:EcoShine24/grocery/screen/trackorder.dart';
+import 'package:EcoShine24/grocery/screen/MyReview.dart';
+import 'package:EcoShine24/grocery/screen/ShowAddress.dart';
+import 'package:EcoShine24/grocery/screen/changePassword.dart';
+import 'package:EcoShine24/grocery/Web/WebviewTermandCondition.dart';
 
 class ProfileView extends StatefulWidget {
   final Function? changeView;
-
   const ProfileView({Key? key, this.changeView}) : super(key: key);
 
   @override
@@ -40,21 +36,18 @@ class _ProfileViewState extends State<ProfileView> {
     String image = pref.getString("pp") ?? "";
     String userid = pref.getString("user_id") ?? "";
     mobile = pref.getString("mobile");
-    if (isloginv == null) {
-      isloginv = false;
-    }
 
     setState(() {
       user_id = userid;
-      FoodAppConstant.name = name;
-      FoodAppConstant.email = email;
-      FoodAppConstant.isLogin = isloginv;
-      FoodAppConstant.User_ID = userid;
-      FoodAppConstant.image = image;
+      GroceryAppConstant.name = name;
+      GroceryAppConstant.email = email;
+      GroceryAppConstant.isLogin = isloginv;
+      GroceryAppConstant.User_ID = userid;
+      GroceryAppConstant.image = image;
 
-      // print(FoodAppConstant.image.length);
-      // print(FoodAppConstant.name.length);
-      // print("FoodAppConstant.name");
+      // print(GroceryAppConstant.image.length);
+      // print(GroceryAppConstant.name.length);
+      // print("GroceryAppConstant.name");
     });
   }
 
@@ -62,1224 +55,718 @@ class _ProfileViewState extends State<ProfileView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    FoodAppConstant.isLogin = false;
+    GroceryAppConstant.isLogin = false;
 
     gatinfo();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("FoodAppConstant.check");
-    print(FoodAppConstant.check);
-    if (FoodAppConstant.check) {
+    print("GroceryAppConstant.check");
+    print(GroceryAppConstant.check);
+    if (GroceryAppConstant.check) {
       gatinfo();
       setState(() {
-        FoodAppConstant.check = false;
+        GroceryAppConstant.check = false;
       });
     }
-    //
+
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 243, 250, 255),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              child: ListView(
-                children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            height: 200,
-                            // decoration: BoxDecoration(
-                            //   gradient: LinearGradient(
-                            //     begin: Alignment.topCenter,
-                            //     end: Alignment.bottomCenter,
-                            //     colors: <Color>[
-                            //       FoodAppColors.tela,
-                            //       FoodAppColors.tela1,
-                            //     ],
-                            //   ),
-                            // ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Card(
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: <Widget>[
-                                        Container(
-                                          height: 150.0,
-                                          // margin: EdgeInsets.only(top: 45),
-                                          child: CircleAvatar(
-                                            radius: 60,
-                                            backgroundColor:
-                                                FoodAppColors.white,
-                                            child: ClipOval(
-                                              child: new SizedBox(
-                                                width: 120.0,
-                                                height: 120.0,
-                                                child: FoodAppConstant
-                                                        .image.isEmpty
-                                                    ? Image.asset(
-                                                        'assets/images/logo.png',
-                                                        fit: BoxFit.fill,
-                                                      )
-                                                    : FoodAppConstant
-                                                                .image.length ==
-                                                            1
-                                                        ? Image.asset(
-                                                            'assets/images/logo.png',
-                                                            fit: BoxFit.cover)
-                                                        : FoodAppConstant
-                                                                    .image ==
-                                                                "https://www.bigwelt.com/manage/uploads/customers/nopp.png"
-                                                            ? Image.asset(
-                                                                'assets/images/logo.png',
-                                                              )
-                                                            : Image.network(
-                                                                FoodAppConstant
-                                                                    .image,
-                                                                fit: BoxFit
-                                                                    .fill),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Center(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 5),
-                                                child: Text(
-                                                  FoodAppConstant.name == null
-                                                      ? "Hello Guest"
-                                                      : FoodAppConstant.name
-                                                                  .length ==
-                                                              1
-                                                          ? "Hello Guest"
-                                                          : FoodAppConstant
-                                                              .name,
-                                                  style: TextStyle(
-                                                    color: FoodAppColors
-                                                        .blackLight,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              FoodAppConstant.isLogin
-                                                  ? Text(
-                                                      FoodAppConstant.email ==
-                                                              null
-                                                          ? " "
-                                                          : FoodAppConstant
-                                                              .email,
-                                                      style: TextStyle(
-                                                          color: FoodAppColors
-                                                              .blackLight,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    )
-                                                  : InkWell(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  SignInPage()),
-                                                        );
-                                                      },
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Login",
-                                                          style: TextStyle(
-                                                              color: FoodAppColors
-                                                                  .blackLight,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 16),
-                                                        ),
-                                                      ),
-                                                    ),
-                                            ],
-                                          ),
-                                        ),
-                                      ]),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  elevation: 3,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 5.0, horizontal: 35),
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (FoodAppConstant.isLogin) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TrackOrder()),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignInPage()),
-                                          );
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 65,
-                                        //width: 55,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            // Image.asset(
-                                            //   "assets/images/bag.png",
-                                            //   height: 50,
-                                            //   width: 50,
-                                            // ),
-                                            Icon(
-                                              Icons.shopping_bag_outlined,
-                                              color: FoodAppColors.blackLight,
-                                              size: 22.0,
-                                            ),
-                                            Text(
-                                              "BOKKINGS",
-                                              maxLines: 1,
-                                              style: TextStyle(fontSize: 10),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 5.0, horizontal: 35),
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (GroceryAppConstant.isLogin) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MyReview()),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignInPage(),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 65,
-                                        width: 55,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Icon(
-                                              Icons.star,
-                                              color: FoodAppColors.blackLight,
-                                              size: 22.0,
-                                            ),
-                                            Text(
-                                              " REVIEWS",
-                                              maxLines: 1,
-                                              style: TextStyle(fontSize: 9),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 5.0, horizontal: 35),
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (Platform.isAndroid) {
-                                          _shareAndroidApp();
-                                        } else {
-                                          _shareIosApp();
-                                        }
-                                      },
-                                      child: Container(
-                                        //  decoration: BoxDecoration(
-                                        //     boxShadow: [
-                                        //       // BoxShadow(
-                                        //       //     color: FoodAppColors.blackLight
-                                        //       //         .withOpacity(0.3),
-                                        //       //     blurRadius: 5.0,
-                                        //       //     offset: Offset(0.0, 3.0)),
-                                        //     ],
-                                        //     border: Border.all(
-                                        //         color:
-                                        //             GroceryAppColors.blackLight),
-                                        //     color: Colors.white,
-                                        //     borderRadius:
-                                        //         BorderRadius.circular(
-                                        //             10.0)),
-                                        height: 65,
-                                        width: 55,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            // Image.asset(
-                                            //     "assets/images/share.png"),
-                                            Icon(
-                                              Icons.share,
-                                              color: FoodAppColors.blackLight,
-                                              size: 22.0,
-                                            ),
-                                            Text(
-                                              "SHARE",
-                                              style: TextStyle(fontSize: 10),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-
-                          ///===================caRD 3====================================
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            elevation: 2,
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15, bottom: 10, top: 10),
-                                    child: Text(
-                                      "Account Overview",
-                                      style: TextStyle(
-                                        color: FoodAppColors.blackLight,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  // Container(
-                                  //   height: 50,
-                                  //   color: Colors.white,
-                                  //   child: InkWell(
-                                  //     onTap: () {
-                                  //       if (FoodAppConstant.isLogin) {
-                                  //         Navigator.push(
-                                  //           context,
-                                  //           MaterialPageRoute(
-                                  //               builder: (context) =>
-                                  //                   TrackOrder()),
-                                  //         );
-                                  //       } else {
-                                  //         Navigator.push(
-                                  //           context,
-                                  //           MaterialPageRoute(
-                                  //               builder: (context) =>
-                                  //                   SignInPage()),
-                                  //         );
-                                  //       }
-                                  //     },
-                                  //     child: Padding(
-                                  //       padding: const EdgeInsets.only(
-                                  //           left: 20, right: 20),
-                                  //       child: Row(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment
-                                  //                 .spaceBetween,
-                                  //         children: [
-                                  //           Container(
-                                  //             height: 25,
-                                  //             width: 25,
-                                  //             decoration: BoxDecoration(
-                                  //               color: FoodAppColors
-                                  //                   .tela
-                                  //                   .withOpacity(0.2),
-                                  //               borderRadius:
-                                  //                   BorderRadius.all(
-                                  //                 Radius.circular(15),
-                                  //               ),
-                                  //             ),
-                                  //             child: Icon(
-                                  //               Icons
-                                  //                   .shopping_bag_outlined,
-                                  //               color:
-                                  //                   FoodAppColors.tela,
-                                  //               size: 25.0,
-                                  //             ),
-                                  //           ),
-                                  //           SizedBox(width: 20),
-                                  //           Text(
-                                  //             "My Booking",
-                                  //             style: TextStyle(
-                                  //               color:
-                                  //                   FoodAppColors.blackLight,
-                                  //               fontSize: 15,
-                                  //               fontWeight:
-                                  //                   FontWeight.bold,
-                                  //             ),
-                                  //           ),
-                                  //           Spacer(),
-                                  //           Icon(
-                                  //             Icons
-                                  //                 .arrow_forward_ios_rounded,
-                                  //             color: FoodAppColors.blackLight,
-                                  //             size: 20.0,
-                                  //           ),
-                                  //         ],
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-
-                                  // Container(
-                                  //   height: 2,
-                                  //   color: Colors.grey.withOpacity(0.2),
-                                  // ),
-
-                                  ///------------------------------------------Service Address------------------------------------------------
-
-                                  Container(
-                                    height: 50,
-                                    color: Colors.white,
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (FoodAppConstant.isLogin) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ShowAddress("1")),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignInPage()),
-                                          );
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20, right: 20),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              height: 25,
-                                              width: 25,
-                                              decoration: BoxDecoration(
-                                                // color: Colors.blue
-                                                //     .withOpacity(0.2),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(15),
-                                                ),
-                                              ),
-                                              child: Icon(
-                                                Icons.location_on_outlined,
-                                                // color: Colors.blue,
-                                                size: 25.0,
-                                              ),
-                                            ),
-                                            SizedBox(width: 20),
-                                            Text(
-                                              "Service Address",
-                                              style: TextStyle(
-                                                color: FoodAppColors.blackLight,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Spacer(),
-                                            Icon(
-                                              Icons.arrow_forward_ios_rounded,
-                                              color: FoodAppColors.blackLight,
-                                              size: 20.0,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 2,
-                                    color: Colors.grey.withOpacity(0.2),
-                                  ),
-
-                                  ///-------------------------------------------------------my review------------------------------------------->>
-                                  // Container(
-                                  //   height: 50,
-                                  //   color: Colors.white,
-                                  //   child: InkWell(
-                                  //     onTap: () {
-                                  //       if (FoodAppConstant.isLogin) {
-                                  //         Navigator.push(
-                                  //           context,
-                                  //           MaterialPageRoute(
-                                  //               builder: (context) =>
-                                  //                   MyReview()),
-                                  //         );
-                                  //       } else {
-                                  //         Navigator.push(
-                                  //           context,
-                                  //           MaterialPageRoute(
-                                  //               builder: (context) =>
-                                  //                   SignInPage()),
-                                  //         );
-                                  //       }
-                                  //     },
-                                  //     child: Padding(
-                                  //       padding: const EdgeInsets.only(
-                                  //           left: 20, right: 20),
-                                  //       child: Row(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment.spaceBetween,
-                                  //         children: [
-                                  //           Container(
-                                  //             height: 25,
-                                  //             width: 25,
-                                  //             decoration: BoxDecoration(
-                                  //               color: Colors.yellow
-                                  //                   .withOpacity(0.2),
-                                  //               borderRadius: BorderRadius.all(
-                                  //                 Radius.circular(15),
-                                  //               ),
-                                  //             ),
-                                  //             child: Icon(
-                                  //               Icons.star,
-                                  //               color: Colors.yellow,
-                                  //               size: 25.0,
-                                  //             ),
-                                  //           ),
-                                  //           SizedBox(width: 20),
-                                  //           Text(
-                                  //             "My Review",
-                                  //             style: TextStyle(
-                                  //               color: FoodAppColors.blackLight,
-                                  //               fontSize: 15,
-                                  //               fontWeight: FontWeight.bold,
-                                  //             ),
-                                  //           ),
-                                  //           Spacer(),
-                                  //           Icon(
-                                  //             Icons.arrow_forward_ios_rounded,
-                                  //             color: FoodAppColors.blackLight,
-                                  //             size: 20.0,
-                                  //           ),
-                                  //         ],
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  // Container(
-                                  //   height: 2,
-                                  //   color: Colors.grey.withOpacity(0.2),
-                                  // ),
-
-                                  ///------------------------------------------------update password-------------------------------------->>>
-                                  Container(
-                                    height: 50,
-                                    color: Colors.white,
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (FoodAppConstant.isLogin) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ChangePassword()),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignInPage()),
-                                          );
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20, right: 20),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              height: 25,
-                                              width: 25,
-                                              decoration: BoxDecoration(
-                                                // color: Colors.orange
-                                                //     .withOpacity(0.2),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(15),
-                                                ),
-                                              ),
-                                              child: Icon(
-                                                Icons.password_outlined,
-                                                // color: Colors.orange,
-                                                size: 25.0,
-                                              ),
-                                            ),
-                                            SizedBox(width: 20),
-                                            Text(
-                                              "Update Password",
-                                              style: TextStyle(
-                                                color: FoodAppColors.blackLight,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Spacer(),
-                                            Icon(
-                                              Icons.arrow_forward_ios_rounded,
-                                              color: FoodAppColors.blackLight,
-                                              size: 20.0,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 2,
-                                    color: Colors.grey.withOpacity(0.2),
-                                  ),
-
-                                  /// --------------------------------------------edit profile-------------------------------->>
-                                  Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      // color: Colors.pink
-                                      //     .withOpacity(0.2),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
-                                      ),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (FoodAppConstant.isLogin) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditProfilePage(user_id)),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignInPage()),
-                                          );
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20, right: 20),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              height: 25,
-                                              width: 25,
-                                              decoration: BoxDecoration(
-                                                // color: Colors.pink
-                                                //     .withOpacity(0.2),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(15),
-                                                ),
-                                              ),
-                                              child: Icon(
-                                                Icons.edit_outlined,
-                                                // color: Colors.pink,
-                                                size: 25.0,
-                                              ),
-                                            ),
-                                            SizedBox(width: 20),
-                                            Text(
-                                              "Update Profile",
-                                              style: TextStyle(
-                                                color: FoodAppColors.blackLight,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Spacer(),
-                                            Icon(
-                                              Icons.arrow_forward_ios_rounded,
-                                              color: FoodAppColors.blackLight,
-                                              size: 20.0,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  // Container(
-                                  //   height: 2,
-                                  //   color: Colors.grey.withOpacity(0.2),
-                                  // ),
-
-                                  // Container(
-                                  //   height: 12,
-                                  // )
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(
-                                  //       left: 28.0, right: 58),
-                                  //   child: Card(
-                                  //     child: Row(children: [
-                                  //       Container(
-                                  //         height: 75,
-                                  //         width: 75,
-                                  //         child: Image.asset(
-                                  //             "assets/images/gift.gif"),
-                                  //       ),
-                                  //       Text("Refer And Earn")
-                                  //     ]),
-                                  //   ),
-                                  // ),
-                                ]),
-                          ),
-
-                          Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, bottom: 10, top: 8),
-                                  child: Text(
-                                    "More ",
-                                    style: TextStyle(
-                                      color: FoodAppColors.blackLight,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                ////========================contact us-=======================================
-                                Container(
-                                  height: 50,
-                                  color: Colors.white,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (FoodAppConstant.isLogin) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => WebViewClass(
-                                                    "Contact Us",
-                                                    ""
-                                                        "${GroceryAppConstant.base_url}contact"))
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                                            );
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignInPage()),
-                                        );
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, right: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            height: 25,
-                                            width: 25,
-                                            decoration: BoxDecoration(
-                                              // color: FoodAppColors.tela
-                                              //     .withOpacity(0.2),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(15),
-                                              ),
-                                            ),
-                                            child: Icon(
-                                              Icons.phone,
-                                              color: FoodAppColors.blackLight,
-                                              size: 25.0,
-                                            ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Text(
-                                            "CONTACT US",
-                                            style: TextStyle(
-                                              color: FoodAppColors.blackLight,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            color: FoodAppColors.blackLight,
-                                            size: 20.0,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 2,
-                                  color: Colors.grey.withOpacity(0.2),
-                                ),
-                                ////==========================================Privacy Policy========================
-                                Container(
-                                  height: 50,
-                                  color: Colors.white,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (FoodAppConstant.isLogin) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => WebViewClass(
-                                                    "Privacy Policy",
-                                                    ""
-                                                        "${GroceryAppConstant.base_url}pp"))
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                                            );
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignInPage()),
-                                        );
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, right: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            height: 25,
-                                            width: 25,
-                                            decoration: BoxDecoration(
-                                              // color: FoodAppColors.tela
-                                              //     .withOpacity(0.2),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(15),
-                                              ),
-                                            ),
-                                            child: Icon(
-                                              Icons.privacy_tip_sharp,
-                                              color: FoodAppColors.blackLight,
-                                              size: 25.0,
-                                            ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Text(
-                                            "PRIVACY POLICY",
-                                            style: TextStyle(
-                                              color: FoodAppColors.blackLight,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            color: FoodAppColors.blackLight,
-                                            size: 20.0,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 2,
-                                  color: Colors.grey.withOpacity(0.2),
-                                ),
-
-                                ///========================================ABOUT US===========================
-                                Container(
-                                  height: 50,
-                                  color: Colors.white,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (FoodAppConstant.isLogin) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => WebViewClass(
-                                                    "About Us",
-                                                    ""
-                                                        "${GroceryAppConstant.base_url}about"))
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                                            );
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignInPage()),
-                                        );
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, right: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            height: 25,
-                                            width: 25,
-                                            decoration: BoxDecoration(
-                                              // color: FoodAppColors.tela
-                                              //     .withOpacity(0.2),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(15),
-                                              ),
-                                            ),
-                                            child: Icon(
-                                              Icons.info,
-                                              color: FoodAppColors.blackLight,
-                                              size: 25.0,
-                                            ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Text(
-                                            "ABOUT US",
-                                            style: TextStyle(
-                                              color: FoodAppColors.blackLight,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            color: FoodAppColors.blackLight,
-                                            size: 20.0,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 2,
-                                  color: Colors.grey.withOpacity(0.2),
-                                ),
-
-                                ///==================================TERMS AND CONDITIONS==========================
-                                Container(
-                                  height: 50,
-                                  color: Colors.white,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (FoodAppConstant.isLogin) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => WebViewClass(
-                                                    "Terms & Conditions",
-                                                    ""
-                                                        "${GroceryAppConstant.base_url}tc"))
-                                            // Navigator.push(context, MaterialPageRoute(builder: (context) => RateMyAppTestApp())
-//                        NewWishList()),
-//                      Cat_Product
-                                            );
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignInPage()),
-                                        );
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, right: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            height: 25,
-                                            width: 25,
-                                            decoration: BoxDecoration(
-                                              // color: FoodAppColors.tela
-                                              //     .withOpacity(0.2),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(15),
-                                              ),
-                                            ),
-                                            child: Icon(
-                                              Icons.library_books,
-                                              color: FoodAppColors.blackLight,
-                                              size: 25.0,
-                                            ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Text(
-                                            "TERMS AND CONDITIONS",
-                                            style: TextStyle(
-                                              color: FoodAppColors.blackLight,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            color: FoodAppColors.blackLight,
-                                            size: 20.0,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 2,
-                                  color: Colors.grey.withOpacity(0.2),
-                                ),
-                                // Container(
-                                //   height: 12,
-                                // ),
-
-                                FoodAppConstant.isLogin
-                                    ? Container(
-                                        height: 50,
-                                        color: Colors.white,
-                                        child: InkWell(
-                                          onTap: () {
-                                            _callLogoutData();
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 20, right: 20),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  height: 25,
-                                                  width: 25,
-                                                  decoration: BoxDecoration(
-                                                    // color: Colors.red
-                                                    //     .withOpacity(0.2),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(15),
-                                                    ),
-                                                  ),
-                                                  child: Icon(
-                                                    Icons.logout_outlined,
-                                                    color: Colors.red,
-                                                    size: 25.0,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 20),
-                                                Text(
-                                                  "Logout",
-                                                  style: TextStyle(
-                                                    color: FoodAppColors
-                                                        .blackLight,
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Icon(
-                                                  Icons
-                                                      .arrow_forward_ios_rounded,
-                                                  color:
-                                                      FoodAppColors.blackLight,
-                                                  size: 20.0,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Container(
-                                        height: 50,
-                                        color: Colors.white,
-                                        child: InkWell(
-                                          onTap: () {
-                                            if (FoodAppConstant.isLogin) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SignInPage()),
-                                              );
-                                            } else {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SignInPage()),
-                                              );
-                                            }
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 20, right: 20),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  height: 25,
-                                                  width: 25,
-                                                  decoration: BoxDecoration(
-                                                    // color: Colors.green
-                                                    //     .withOpacity(0.2),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(15),
-                                                    ),
-                                                  ),
-                                                  child: Icon(
-                                                    Icons.login_outlined,
-                                                    color: Colors.green,
-                                                    size: 25.0,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 20),
-                                                Text(
-                                                  "Login ",
-                                                  style: TextStyle(
-                                                    color: FoodAppColors
-                                                        .blackLight,
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Icon(
-                                                  Icons
-                                                      .arrow_forward_ios_rounded,
-                                                  color:
-                                                      FoodAppColors.blackLight,
-                                                  size: 20.0,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "🇮🇳 Made with ❤ in India 🇮🇳",
-                                      style: TextStyle(
-                                        color: FoodAppColors.blackLight,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          )
+      backgroundColor: Color(0xFFF8F9FA),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // Modern App Bar with Profile Header
+          SliverAppBar(
+            expandedHeight: 280,
+            pinned: true,
+            elevation: 0,
+            backgroundColor: Colors.white,
+            automaticallyImplyLeading: false,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                children: [
+                  // Gradient Background
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          GroceryAppColors.tela,
+                          GroceryAppColors.tela1,
+                          GroceryAppColors.tela.withOpacity(0.8),
                         ],
                       ),
+                    ),
+                  ),
+                  // Decorative Circles
+                  Positioned(
+                    top: -50,
+                    right: -50,
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.1),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: -30,
+                    left: -30,
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.08),
+                      ),
+                    ),
+                  ),
+                  // Profile Content
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Profile Avatar with Edit Button
+                          Center(
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: 110,
+                                  height: 110,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.white,
+                                        Colors.white.withOpacity(0.9),
+                                      ],
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 20,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0, 8),
+                                      ),
+                                    ],
+                                  ),
+                                  padding: EdgeInsets.all(4),
+                                  child: CircleAvatar(
+                                    radius: 50,
+                                    backgroundColor: Colors.white,
+                                    child: ClipOval(
+                                      child: SizedBox(
+                                        width: 102,
+                                        height: 102,
+                                        child: GroceryAppConstant.image.isEmpty
+                                            ? Image.asset(
+                                                'assets/images/logo.png',
+                                                fit: BoxFit.cover,
+                                              )
+                                            : GroceryAppConstant.image.length ==
+                                                    1
+                                                ? Image.asset(
+                                                    'assets/images/logo.png',
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : GroceryAppConstant.image ==
+                                                        "https://www.bigwelt.com/manage/uploads/customers/nopp.png"
+                                                    ? Image.asset(
+                                                        'assets/images/logo.png',
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : Image.network(
+                                                        GroceryAppConstant
+                                                            .image,
+                                                        fit: BoxFit.cover,
+                                                        errorBuilder: (context,
+                                                                error,
+                                                                stackTrace) =>
+                                                            Image.asset(
+                                                          'assets/images/logo.png',
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                if (GroceryAppConstant.isLogin)
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                EditProfilePage(user_id),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 36,
+                                        height: 36,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              GroceryAppColors.tela,
+                                              GroceryAppColors.tela1,
+                                            ],
+                                          ),
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: GroceryAppColors.tela
+                                                  .withOpacity(0.5),
+                                              blurRadius: 8,
+                                              offset: Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Icon(
+                                          Icons.edit,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          // User Name
+                          Text(
+                            GroceryAppConstant.name == null ||
+                                    GroceryAppConstant.name.length <= 1
+                                ? "Hello Guest"
+                                : GroceryAppConstant.name,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          // Email or Sign In Button
+                          GroceryAppConstant.isLogin
+                              ? Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.email_outlined,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        GroceryAppConstant.email ?? "",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SignInPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 32,
+                                      vertical: 12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(25),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 10,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.login,
+                                          color: GroceryAppColors.tela,
+                                          size: 20,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          "Sign In",
+                                          style: TextStyle(
+                                            color: GroceryAppColors.tela,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Content Area
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  // Quick Actions Grid
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Quick Actions",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildQuickActionCard(
+                                icon: Icons.calendar_today_rounded,
+                                title: "My Bookings",
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFFFF6B6B),
+                                    Color(0xFFFF8E53),
+                                  ],
+                                ),
+                                onTap: () {
+                                  if (GroceryAppConstant.isLogin) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TrackOrder(),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SignInPage(),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _buildQuickActionCard(
+                                icon: Icons.star_rounded,
+                                title: "My Reviews",
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFFFFA726),
+                                    Color(0xFFFFB74D),
+                                  ],
+                                ),
+                                onTap: () {
+                                  if (GroceryAppConstant.isLogin) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MyReview(),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SignInPage(),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildQuickActionCard(
+                                icon: Icons.location_on_rounded,
+                                title: "Addresses",
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFF66BB6A),
+                                    Color(0xFF81C784),
+                                  ],
+                                ),
+                                onTap: () {
+                                  if (GroceryAppConstant.isLogin) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ShowAddress("1"),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SignInPage(),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _buildQuickActionCard(
+                                icon: Icons.share_rounded,
+                                title: "Share App",
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFF42A5F5),
+                                    Color(0xFF64B5F6),
+                                  ],
+                                ),
+                                onTap: () {
+                                  Platform.isAndroid
+                                      ? _shareAndroidApp()
+                                      : _shareIosApp();
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Account Settings
+                  _buildSettingsSection(
+                    title: "Account Settings",
+                    icon: Icons.person_outline_rounded,
+                    children: [
+                      _buildSettingsTile(
+                        icon: Icons.edit_rounded,
+                        title: "Edit Profile",
+                        subtitle: "Update your personal information",
+                        color: Color(0xFF5C6BC0),
+                        onTap: () {
+                          if (GroceryAppConstant.isLogin) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProfilePage(user_id),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignInPage(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      _buildSettingsTile(
+                        icon: Icons.lock_outline_rounded,
+                        title: "Change Password",
+                        subtitle: "Update your account password",
+                        color: Color(0xFFEF5350),
+                        onTap: () {
+                          if (GroceryAppConstant.isLogin) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChangePassword(),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignInPage(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ],
-                  )
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Support & Info
+                  _buildSettingsSection(
+                    title: "Support & Information",
+                    icon: Icons.help_outline_rounded,
+                    children: [
+                      _buildSettingsTile(
+                        icon: Icons.phone_rounded,
+                        title: "Contact Us",
+                        subtitle: "Get in touch with our team",
+                        color: Color(0xFF26A69A),
+                        onTap: () {
+                          if (GroceryAppConstant.isLogin) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WebViewClass(
+                                  "Contact Us",
+                                  "${GroceryAppConstant.base_url}contact",
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignInPage(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      _buildSettingsTile(
+                        icon: Icons.privacy_tip_outlined,
+                        title: "Privacy Policy",
+                        subtitle: "Read our privacy policy",
+                        color: Color(0xFF7E57C2),
+                        onTap: () {
+                          if (GroceryAppConstant.isLogin) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WebViewClass(
+                                  "Privacy Policy",
+                                  "${GroceryAppConstant.base_url}pp",
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignInPage(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      _buildSettingsTile(
+                        icon: Icons.description_rounded,
+                        title: "Terms & Conditions",
+                        subtitle: "View our terms of service",
+                        color: Color(0xFFFF7043),
+                        onTap: () {
+                          if (GroceryAppConstant.isLogin) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WebViewClass(
+                                  "Terms & Conditions",
+                                  "${GroceryAppConstant.base_url}tc",
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignInPage(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      _buildSettingsTile(
+                        icon: Icons.info_rounded,
+                        title: "About Us",
+                        subtitle: "Learn more about us",
+                        color: Color(0xFF42A5F5),
+                        onTap: () {
+                          if (GroceryAppConstant.isLogin) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WebViewClass(
+                                  "About Us",
+                                  "${GroceryAppConstant.base_url}about",
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignInPage(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Logout Button
+                  GestureDetector(
+                    onTap: () {
+                      if (GroceryAppConstant.isLogin) {
+                        _callLogoutData();
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignInPage(),
+                          ),
+                        );
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: GroceryAppConstant.isLogin
+                            ? Color(0xFFFFEBEE)
+                            : Color(0xFFE8F5E9),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: GroceryAppConstant.isLogin
+                              ? Color(0xFFEF5350).withOpacity(0.3)
+                              : Color(0xFF66BB6A).withOpacity(0.3),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            GroceryAppConstant.isLogin
+                                ? Icons.logout_rounded
+                                : Icons.login_rounded,
+                            color: GroceryAppConstant.isLogin
+                                ? Color(0xFFEF5350)
+                                : Color(0xFF66BB6A),
+                            size: 24,
+                          ),
+                          SizedBox(width: 12),
+                          Text(
+                            GroceryAppConstant.isLogin
+                                ? "Logout"
+                                : "Sign In to Continue",
+                            style: TextStyle(
+                              color: GroceryAppConstant.isLogin
+                                  ? Color(0xFFEF5350)
+                                  : Color(0xFF66BB6A),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Footer
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          GroceryAppColors.tela,
+                          GroceryAppColors.tela1,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: GroceryAppColors.tela.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "🇮🇳",
+                          style: TextStyle(fontSize: 24),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "Made with ❤️ in India",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "🇮🇳",
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -1289,12 +776,194 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  // Helper method for quick action cards
+  Widget _buildQuickActionCard({
+    required IconData icon,
+    required String title,
+    required Gradient gradient,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Helper method for settings sections
+  Widget _buildSettingsSection({
+    required String title,
+    required IconData icon,
+    required List<Widget> children,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        GroceryAppColors.tela,
+                        GroceryAppColors.tela1,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  // Helper method for settings tiles
+  Widget _buildSettingsTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.grey[400],
+                size: 16,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _callLogoutData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    FoodAppConstant.isLogin = false;
-    FoodAppConstant.email = " ";
-    FoodAppConstant.name = " ";
-    FoodAppConstant.image = " ";
+    GroceryAppConstant.isLogin = false;
+    GroceryAppConstant.email = " ";
+    GroceryAppConstant.name = " ";
+    GroceryAppConstant.image = " ";
 
     pref.setString("pp", " ");
     pref.setString("email", " ");

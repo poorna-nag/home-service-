@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapClass extends StatefulWidget {
@@ -87,6 +87,7 @@ class _MapClassState extends State<MapClass> {
             'images/destination_map_marker.png')
         .then((d) {
       customIcon = d;
+      return null;
     });
   }
 
@@ -108,12 +109,12 @@ class _MapClassState extends State<MapClass> {
         ),
         title: Text(
           "Get Location",
-          style: TextStyle(color: FoodAppColors.white),
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: FoodAppColors.tela,
-        elevation: 0.0,
+        backgroundColor: Color(0xFF004AAD), // Professional dark blue
+        elevation: 2.0,
         //brightness: Brightness.light,
-        iconTheme: IconThemeData(color: FoodAppColors.tela1),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -188,10 +189,11 @@ class _MapClassState extends State<MapClass> {
       child: Center(
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: FoodAppColors.tela,
-            padding: EdgeInsets.only(top: 12, left: 10, right: 10, bottom: 12),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(24))),
+            backgroundColor: Color(0xFF004AAD), // Professional dark blue
+            padding: EdgeInsets.only(top: 12, left: 20, right: 20, bottom: 12),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            elevation: 2,
           ),
           onPressed: () {
             print(lat);
@@ -201,9 +203,9 @@ class _MapClassState extends State<MapClass> {
             // Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen()),);
           },
           child: Text(
-            "OK",
+            "Confirm Location",
             style: TextStyle(
-                color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
       ),
@@ -214,7 +216,10 @@ class _MapClassState extends State<MapClass> {
     return Align(
       alignment: Alignment.center,
       child: Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(
+              Color(0xFF004AAD)), // Professional dark blue
+        ),
       ),
     );
   }

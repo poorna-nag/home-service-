@@ -1,20 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:aladdinmart/grocery/Auth/newMap.dart';
-import 'package:aladdinmart/grocery/Auth/signin.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/model/AddressModel.dart';
-import 'package:aladdinmart/grocery/model/RegisterModel.dart';
+import 'package:EcoShine24/grocery/Auth/newMap.dart';
+import 'package:EcoShine24/grocery/Auth/signin.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/model/AddressModel.dart';
+import 'package:EcoShine24/grocery/model/RegisterModel.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 import 'ShowAddress.dart';
+import '../../utils/phone_number_utils.dart';
 
 class UpDateAddress extends StatefulWidget {
   final UserAddress address;
@@ -140,17 +140,17 @@ class _HomePageState extends State<UpDateAddress> {
     return Scaffold(
       appBar: AppBar(
           iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
+            color: GroceryAppColors.tela1, // blue accent
           ),
           elevation: 0.0,
           backgroundColor: GroceryAppColors.tela,
           leading: new IconButton(
-            icon: new Icon(Icons.arrow_back, color: Colors.white),
+            icon: new Icon(Icons.arrow_back, color: GroceryAppColors.tela1),
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
             "Update Address",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: GroceryAppColors.tela1),
           )),
       key: profilescaffoldkey,
       body: Form(
@@ -179,11 +179,10 @@ class _HomePageState extends State<UpDateAddress> {
                               print("Radio $val");
                               setSelectRadio(val!);
                             },
-                            activeColor: Colors.red,
-                            dense:
-                                      true, // Makes the RadioListTile more compact
-                                  visualDensity: VisualDensity(
-                                      horizontal: -4, vertical: -4),
+                            activeColor: GroceryAppColors.tela,
+                            dense: true, // Makes the RadioListTile more compact
+                            visualDensity:
+                                VisualDensity(horizontal: -4, vertical: -4),
                           ),
                         ),
                         Expanded(
@@ -192,18 +191,17 @@ class _HomePageState extends State<UpDateAddress> {
                             value: 2,
                             groupValue: selectedRadio,
                             title: Text(
-                              "Profile",
+                              "Office",
                               style: TextStyle(fontSize: 12),
                             ),
                             onChanged: (val) {
                               print("Radio $val");
                               setSelectRadio(val!);
                             },
-                            activeColor: Colors.red,
-                            dense:
-                                      true, // Makes the RadioListTile more compact
-                                  visualDensity: VisualDensity(
-                                      horizontal: -4, vertical: -4),
+                            activeColor: GroceryAppColors.tela,
+                            dense: true, // Makes the RadioListTile more compact
+                            visualDensity:
+                                VisualDensity(horizontal: -4, vertical: -4),
                           ),
                         ),
                         Expanded(
@@ -219,11 +217,10 @@ class _HomePageState extends State<UpDateAddress> {
                               print("Radio $val");
                               setSelectRadio(val!);
                             },
-                            activeColor: Colors.red,
-                            dense:
-                                      true, // Makes the RadioListTile more compact
-                                  visualDensity: VisualDensity(
-                                      horizontal: -4, vertical: -4),
+                            activeColor: GroceryAppColors.tela,
+                            dense: true, // Makes the RadioListTile more compact
+                            visualDensity:
+                                VisualDensity(horizontal: -4, vertical: -4),
                           ),
                         ),
                       ],
@@ -372,13 +369,9 @@ class _HomePageState extends State<UpDateAddress> {
                                 child: TextFormField(
                                   controller: mobileController,
                                   keyboardType: TextInputType.number,
-                                  validator: (String? value) {
-                                    if (value == null ||
-                                        value.isEmpty && value == 10) {
-                                      return " Please enter the mobile No";
-                                    }
-                                    return null;
-                                  },
+                                  inputFormatters:
+                                      PhoneNumberUtils.inputFormatters,
+                                  validator: PhoneNumberUtils.validateMobile,
                                   decoration: InputDecoration(
                                       contentPadding: EdgeInsets.only(left: 10),
                                       border: OutlineInputBorder(
@@ -470,6 +463,10 @@ class _HomePageState extends State<UpDateAddress> {
                               child: TextFormField(
                                 controller: pincodeController,
                                 keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(6),
+                                ],
                                 validator: (String? value) {
                                   if (value == null || value.isEmpty) {
                                     return " Please enter the pincode";
@@ -567,17 +564,17 @@ class _HomePageState extends State<UpDateAddress> {
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: GroceryAppColors.tela,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
               textStyle: TextStyle(
-                color: Colors.white,
+                color: GroceryAppColors.tela1,
               ),
             ),
             child: new Text(
               "Update",
               style: TextStyle(
-                  color: Colors.white,
+                  color: GroceryAppColors.tela1,
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
             ),
@@ -655,6 +652,14 @@ class _HomePageState extends State<UpDateAddress> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? userid = pref.getString("user_id");
     print(userid);
+
+    final mobileValidation =
+        PhoneNumberUtils.validateMobile(mobileController.text);
+    if (mobileValidation != null) {
+      showLongToast(mobileValidation);
+      return;
+    }
+
     var map = new Map<String, dynamic>();
     map['add_id'] = id;
     map['shop_id'] = GroceryAppConstant.Shop_id;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/General/Home.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/General/Home.dart';
 
 class ShowInVoiceId1 extends StatefulWidget {
   final String invoice;
@@ -46,11 +46,12 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              color: Colors.teal[50],
+              color: GroceryAppColors.tela1,
             ),
             child: Center(
               child: Container(
                 child: Card(
+                  color: GroceryAppColors.tela1,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -73,7 +74,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 15,
-                                color: Colors.black,
+                                color: GroceryAppColors.tela,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -94,7 +95,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                       width: 70,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: Colors.grey,
+                                          color: GroceryAppColors.tela,
                                         ),
 //                                    borderRadius: BorderRadius.(10.0),
                                       ),
@@ -103,7 +104,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             style: TextStyle(
-                                              color: Colors.green,
+                                              color: GroceryAppColors.tela,
                                               fontWeight: FontWeight.w700,
                                             )),
                                       ),
@@ -116,7 +117,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                     width: 140,
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: Colors.grey,
+                                        color: GroceryAppColors.tela,
                                       ),
 //                                    borderRadius: BorderRadius.(10.0),
                                     ),
@@ -127,7 +128,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontStyle: FontStyle.normal,
-                                          color: Colors.black,
+                                          color: GroceryAppColors.tela,
                                         ),
                                       ),
                                     ),
@@ -145,7 +146,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
-                                          color: Colors.black),
+                                          color: GroceryAppColors.tela),
                                     ),
                                   ),
                                   Padding(
@@ -153,7 +154,8 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                     child: Text(
                                       "8105222216",
                                       style: TextStyle(
-                                          fontSize: 20, color: Colors.black),
+                                          fontSize: 20,
+                                          color: GroceryAppColors.tela),
                                     ),
                                   ),
                                 ],
@@ -169,7 +171,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
-                                          color: Colors.black),
+                                          color: GroceryAppColors.tela),
                                     ),
                                   ),
                                   Padding(
@@ -177,7 +179,8 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                     child: Text(
                                       "8105222216",
                                       style: TextStyle(
-                                          fontSize: 20, color: Colors.black),
+                                          fontSize: 20,
+                                          color: GroceryAppColors.tela),
                                     ),
                                   ),
                                 ],
@@ -189,7 +192,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                 padding: EdgeInsets.only(top: 10, bottom: 10),
                                 decoration: new BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
-                                    color: GroceryAppColors.green),
+                                    color: GroceryAppColors.tela),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -208,7 +211,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId1> {
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             fontSize: 22,
-                                            color: Colors.white,
+                                            color: GroceryAppColors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),

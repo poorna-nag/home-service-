@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -88,9 +89,9 @@ class _TrackingState extends State<Tracking> {
       PolylineId id = PolylineId("poly");
       Polyline polyline = Polyline(
         polylineId: id,
-        color: Colors.black,
+        color: FoodAppColors.tela, // Blue theme for route
         points: polylineCoordinates,
-        width: 3,
+        width: 4,
       );
       polylines[id] = polyline;
     });
@@ -99,13 +100,13 @@ class _TrackingState extends State<Tracking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: FoodAppColors.tela1, // Blue accent background
         body: StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection("AssignedOrder")
                 .where('name', isEqualTo: widget.id)
                 .snapshots(),
             builder: (BuildContext ctx, AsyncSnapshot<QuerySnapshot> snapshot) {
-           
               if (snapshot.connectionState == ConnectionState.waiting) {
                 Center(
                   child: CircularProgressIndicator(),

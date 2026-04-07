@@ -2,8 +2,8 @@ import 'package:http/http.dart' as http;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/model/BlogModel.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/model/BlogModel.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -133,7 +133,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => VideoPlayer(pro)),
+                          MaterialPageRoute(
+                              builder: (context) => VideoPlayer(pro)),
                         );
                       },
                       child: Container(
@@ -144,8 +145,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
                           fit: BoxFit.fill,
                           imageUrl: url1,
 //                                                  =="no-cover.png"? getImage(topProducts[index].productIs):topProducts[index].image,
-                          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) => new Icon(Icons.error),
+                          placeholder: (context, url) =>
+                              Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                              new Icon(Icons.error),
                         ),
                       ),
                     )
@@ -181,7 +184,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
     map['blog'] = widget.products.pageId;
     map['shop_id'] = GroceryAppConstant.Shop_id;
 
-    final response = await http.post(Uri.parse(GroceryAppConstant.base_url + 'api/blogCount.php'), body: map);
+    final response = await http.post(
+        Uri.parse(GroceryAppConstant.base_url + 'api/blogCount.php'),
+        body: map);
     if (response.statusCode == 200) {
     } else
       throw Exception("Unable to get Employee list");
@@ -279,7 +284,8 @@ class _PostStats extends StatelessWidget {
                   label: '',
                   onTap: () {
                     print("share");
-                    Share.share(GroceryAppConstant.mainurl + post!.url.toString());
+                    Share.share(
+                        GroceryAppConstant.mainurl + post!.url.toString());
                   }),
             ),
             // Text(

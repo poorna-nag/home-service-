@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:aladdinmart/grocery/BottomNavigation/wishlist.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/dbhelper/CarrtDbhelper.dart';
-import 'package:aladdinmart/grocery/model/InvoiceModel.dart';
+import 'package:EcoShine24/grocery/BottomNavigation/wishlist.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/dbhelper/CarrtDbhelper.dart';
+import 'package:EcoShine24/grocery/model/InvoiceModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:http/http.dart' as http;
@@ -96,7 +96,7 @@ class _InstaMojoPaymentWebViewFoodState
     super.initState();
     pullToRefreshController = PullToRefreshController(
       options: PullToRefreshOptions(
-        color: Colors.blue,
+        color: GroceryAppColors.tela,
       ),
       onRefresh: () async {
         if (Platform.isAndroid) {
@@ -123,7 +123,7 @@ class _InstaMojoPaymentWebViewFoodState
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: Color.fromARGB(255, 10, 102, 53),
+            backgroundColor: GroceryAppColors.tela,
             elevation: 0,
             title: Text("Payment"),
             centerTitle: true,
@@ -350,10 +350,10 @@ class _InstaMojoPaymentWebViewFoodState
     print('called data oredr secnd');
     print('called data oredr secnd      ' + GroceryAppConstant.email);
 
-    final email =
-        GroceryAppConstant.email.contains("@gmai.com") || GroceryAppConstant.email.contains("@")
-            ? GroceryAppConstant.email
-            : 'shahiexpressofficial@gmail.com';
+    final email = GroceryAppConstant.email.contains("@gmai.com") ||
+            GroceryAppConstant.email.contains("@")
+        ? GroceryAppConstant.email
+        : 'shahiexpressofficial@gmail.com';
 
     print('called data email      ' + email);
 
@@ -393,8 +393,9 @@ class _InstaMojoPaymentWebViewFoodState
       map['image'] = widget.prodctlist1[i].pimage;
       map['prime'] = "0";
       map['mv'] = widget.prodctlist1[i].mv.toString();
-      final response = await http
-          .post(Uri.parse(GroceryAppConstant.base_url + 'api/order.php'), body: map);
+      final response = await http.post(
+          Uri.parse(GroceryAppConstant.base_url + 'api/order.php'),
+          body: map);
       print('called data oredr snd  ' + response.body);
       try {
         // print(response);

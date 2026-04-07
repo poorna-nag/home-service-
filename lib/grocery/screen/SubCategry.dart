@@ -1,19 +1,17 @@
 import 'dart:developer';
 
-import 'package:aladdinmart/constent/app_constent.dart';
-import 'package:aladdinmart/grocery/screen/ShowAddress.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:EcoShine24/constent/app_constent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:aladdinmart/grocery/Auth/signin.dart';
-import 'package:aladdinmart/grocery/BottomNavigation/wishlist.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/dbhelper/CarrtDbhelper.dart';
-import 'package:aladdinmart/grocery/dbhelper/database_helper.dart';
-import 'package:aladdinmart/grocery/model/CategaryModal.dart';
-import 'package:aladdinmart/grocery/model/productmodel.dart';
-import 'package:aladdinmart/grocery/screen/SearchScreen.dart';
-import 'package:aladdinmart/grocery/screen/detailpage.dart';
+import 'package:EcoShine24/grocery/Auth/signin.dart';
+import 'package:EcoShine24/grocery/BottomNavigation/wishlist.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/dbhelper/CarrtDbhelper.dart';
+import 'package:EcoShine24/grocery/dbhelper/database_helper.dart';
+import 'package:EcoShine24/grocery/model/CategaryModal.dart';
+import 'package:EcoShine24/grocery/model/productmodel.dart';
+import 'package:EcoShine24/grocery/screen/SearchScreen.dart';
+import 'package:EcoShine24/grocery/screen/detailpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Sbcategory extends StatefulWidget {
@@ -268,8 +266,10 @@ class _Sbcategory extends State<Sbcategory> {
                           },
                           child: Card(
                             elevation: 10.0,
+                            color: GroceryAppColors.tela1,
                             child: Container(
                               decoration: BoxDecoration(
+                                color: GroceryAppColors.tela1,
                                 borderRadius: BorderRadius.circular(2),
                               ),
                               child: Row(
@@ -284,27 +284,11 @@ class _Sbcategory extends State<Sbcategory> {
                                             width: 1.5),
                                         image: DecorationImage(
                                           fit: BoxFit.fill,
-                                          image: item.img!.length > 0
-                                              ? NetworkImage(
-                                                  GroceryAppConstant.base_url +
-                                                      "manage/uploads/p_category/" +
-                                                      item.img.toString(),
-                                                ) as ImageProvider
-                                              : AssetImage(
-                                                  "assets/images/logo.png"),
+                                          image:
+                                              getGroceryCategoryImageProvider(
+                                                  item.img),
                                         )),
                                     margin: EdgeInsets.only(left: 5, right: 10),
-                                    /*  child: CircleAvatar(
-                                    radius: 20,
-                                    backgroundColor: Colors.white,
-                                    child: ClipOval(
-                                      child: new SizedBox(
-                                        width: 40.0,
-                                        height: 40.0,
-                                        child:item.img.length>0?Image.network(Constant.base_url + "manage/uploads/p_category/" + item.img, fit: BoxFit.fill):Image.asset("assets/images/logo.png"),
-                                      ),
-                                    ),
-                                  ),*/
                                   ),
                                   Expanded(
                                     child: Text(
@@ -437,7 +421,7 @@ class _Sbcategory extends State<Sbcategory> {
                                             top: 6,
                                             bottom: 6),
                                         decoration: BoxDecoration(
-                                            color: Colors.white,
+                                            color: GroceryAppColors.tela1,
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(16))),
                                         child: InkWell(
@@ -468,7 +452,7 @@ class _Sbcategory extends State<Sbcategory> {
                                                               Radius.circular(
                                                                   14)),
                                                       color:
-                                                          Colors.blue.shade200,
+                                                          GroceryAppColors.tela,
                                                       image: DecorationImage(
                                                         fit: BoxFit.cover,
                                                         image: products1[index]
@@ -515,8 +499,9 @@ class _Sbcategory extends State<Sbcategory> {
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w400,
-                                                                    color: Colors
-                                                                        .black)
+                                                                    color:
+                                                                        GroceryAppColors
+                                                                            .tela)
                                                                 .copyWith(
                                                                     fontSize:
                                                                         14),
@@ -638,7 +623,7 @@ class _Sbcategory extends State<Sbcategory> {
                                                                             style:
                                                                                 TextStyle(
                                                                               fontSize: 15,
-                                                                              color: GroceryAppColors.black,
+                                                                              color: GroceryAppColors.tela,
                                                                             ),
                                                                           ),
                                                                         ),
@@ -647,7 +632,7 @@ class _Sbcategory extends State<Sbcategory> {
                                                                                 EdgeInsets.only(left: 0),
                                                                             child: Icon(
                                                                               Icons.expand_more,
-                                                                              color: Colors.black,
+                                                                              color: GroceryAppColors.tela,
                                                                               size: 30,
                                                                             ))
                                                                       ],
@@ -795,7 +780,9 @@ class _Sbcategory extends State<Sbcategory> {
                                                                           InkWell(
                                                                         onTap:
                                                                             () async {
-                                                                          SharedPreferences pref = await SharedPreferences.getInstance();
+                                                                          SharedPreferences
+                                                                              pref =
+                                                                              await SharedPreferences.getInstance();
                                                                           if (GroceryAppConstant
                                                                               .isLogin) {
                                                                             if (num.parse(products1[index].quantityInStock ?? '0') >
@@ -815,7 +802,7 @@ class _Sbcategory extends State<Sbcategory> {
                                                                               //   backgroundColor: Colors.green,
                                                                               //   behavior: SnackBarBehavior.floating,
                                                                               // ));
-                                                                            await Navigator.push(
+                                                                              await Navigator.push(
                                                                                 context,
                                                                                 MaterialPageRoute(builder: (context) => WishList()),
                                                                               );

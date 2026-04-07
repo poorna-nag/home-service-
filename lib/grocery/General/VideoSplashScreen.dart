@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:aladdinmart/grocery/Auth/signin.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/General/Home.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/General/Home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
@@ -98,7 +96,7 @@ class VideoState extends State<VideoSplashScreen> {
   void deactivate() {
     if (playerController != null) {
       playerController?.setVolume(0.0);
-      playerController?.removeListener(listener?? () {});
+      playerController?.removeListener(listener ?? () {});
     }
     super.deactivate();
   }

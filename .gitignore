@@ -99,3 +99,6 @@ android/app/build/
 # Large asset files (optional, comment out if needed)
 assets/videos/
 *.mp4
+
+# FVM Version Cache
+.fvm/

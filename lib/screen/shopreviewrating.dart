@@ -1,18 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
-import 'package:aladdinmart/dbhelper/database_helper.dart';
-import 'package:aladdinmart/model/ListModel.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
+import 'package:EcoShine24/dbhelper/database_helper.dart';
+import 'package:EcoShine24/model/ListModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'ShowAddress.dart';
 
 class shopreviewrating extends StatefulWidget {
   String mv;
@@ -100,7 +97,7 @@ class _HomePageState extends State<shopreviewrating> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: FoodAppColors.tela,
+        backgroundColor: FoodAppColors.tela, // Blue theme
         leading: Padding(
           padding: EdgeInsets.only(left: 0.0),
           child: InkWell(
@@ -119,7 +116,6 @@ class _HomePageState extends State<shopreviewrating> {
           ),
         ),
         title: Container(
-          // height: 40,
           child: Text(
             'Vendor Rating Form',
             style: TextStyle(
@@ -390,7 +386,7 @@ class _HomePageState extends State<shopreviewrating> {
                   child: Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: FoodAppColors.tela, // Blue theme
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(20.0)),
                     textStyle: TextStyle(
@@ -402,12 +398,7 @@ class _HomePageState extends State<shopreviewrating> {
                     setState(() {
                       if (_formKeyad.currentState!.validate()) {
                         _AddAddress();
-
-//                              setInfo();
                       }
-
-//                        _status = true;
-//                          FocusScope.of(context).requestFocus(new FocusNode());
                     });
                   },
                 ),
@@ -423,7 +414,7 @@ class _HomePageState extends State<shopreviewrating> {
   Widget _getEditIcon() {
     return new GestureDetector(
       child: new CircleAvatar(
-        backgroundColor: FoodAppColors.pink,
+        backgroundColor: FoodAppColors.tela1, // Blue accent
         radius: 14.0,
         child: new Icon(
           Icons.edit,
@@ -492,6 +483,7 @@ class _HomePageState extends State<shopreviewrating> {
           if (value == null || value.isEmpty) {
             return " Please enter the label";
           }
+          return null;
         },
         decoration: const InputDecoration(hintText: "Enter Label"),
       ),

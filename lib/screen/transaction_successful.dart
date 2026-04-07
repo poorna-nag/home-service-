@@ -1,5 +1,6 @@
-import 'package:aladdinmart/grocery/General/Home.dart';
+import 'package:EcoShine24/grocery/General/Home.dart';
 import 'package:flutter/material.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
 
 class TransactionSuccessful extends StatefulWidget {
   const TransactionSuccessful({Key? key}) : super(key: key);
@@ -49,11 +50,12 @@ class _TransactionSuccessfulState extends State<TransactionSuccessful> {
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              color: Colors.teal[50],
+              color: FoodAppColors.tela1, // Blue accent background
             ),
             child: Center(
               child: Container(
                 child: Card(
+                  color: FoodAppColors.tela, // Blue theme for card
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -77,7 +79,7 @@ class _TransactionSuccessfulState extends State<TransactionSuccessful> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 15,
-                                color: Colors.black,
+                                color: Colors.white, // Blue theme text
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -96,8 +98,7 @@ class _TransactionSuccessfulState extends State<TransactionSuccessful> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                GroceryApp()),
+                                            builder: (context) => GroceryApp()),
                                       );
                                     },
                                     child: Center(
@@ -106,7 +107,8 @@ class _TransactionSuccessfulState extends State<TransactionSuccessful> {
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Colors.blue,
+                                          color:
+                                              Colors.white, // Blue theme text
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),

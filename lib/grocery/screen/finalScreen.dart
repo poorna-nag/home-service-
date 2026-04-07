@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../General/Home.dart';
+import '../General/AppConstant.dart';
 
 class ShowInVoiceId extends StatefulWidget {
   final String invoice;
@@ -39,134 +40,214 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _onBackPressed(),
-      child: Container(
-        child: AspectRatio(
-          aspectRatio: 100 / 100,
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              color: Colors.teal[50],
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                GroceryAppColors.tela,
+                GroceryAppColors.tela1,
+                GroceryAppColors.tela,
+              ],
             ),
+          ),
+          child: SafeArea(
             child: Center(
-              child: Container(
-                child: Card(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Center(
-                        child: Container(
-                          margin: EdgeInsets.only(top: 150),
-                          child: SizedBox(
-                            height: 300,
-                            width: double.infinity,
-                            child: Image.asset('assets/images/orderdone1.png'),
-                          ),
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: EdgeInsets.all(20),
+                  child: Card(
+                    elevation: 15,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.white,
+                            GroceryAppColors.tela.withOpacity(0.02),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 0.0),
-                        child: ListTile(
-                          title: Center(
-                            child: Text(
-                              "Order Placed",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
+                      padding: EdgeInsets.all(30),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Success Animation/Image
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  GroceryAppColors.tela.withOpacity(0.1),
+                                  GroceryAppColors.tela1.withOpacity(0.05),
+                                ],
+                              ),
+                            ),
+                            child: Center(
+                              child: Container(
+                                width: 180,
+                                height: 180,
+                                child: Image.asset(
+                                  'assets/images/orderdone1.png',
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, bottom: 1),
-                                    child: Container(
-                                      margin: EdgeInsets.only(
-                                          top: 10.0, bottom: 10.0),
-                                      height: 40,
-                                      width: 80,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                        ),
-//                                    borderRadius: BorderRadius.(10.0),
-                                      ),
-                                      child: Center(
-                                        child: Text('Order ID',
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: Colors.green,
-                                              fontWeight: FontWeight.w700,
-                                            )),
+
+                          SizedBox(height: 30),
+
+                          // Success Message
+                          Text(
+                            "Order Placed Successfully!",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: GroceryAppColors.tela,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: 10),
+
+                          Text(
+                            "Thank you for your order. We'll prepare it with care!",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: 30),
+
+                          // Order ID Section
+                          Container(
+                            padding: EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: Color(0xFF1B5E20).withOpacity(0.2),
+                                width: 1,
+                              ),
+                              color: Color(0xFF1B5E20).withOpacity(0.05),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Order ID',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: GroceryAppColors.tela1,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      widget.invoice,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: GroceryAppColors.tela,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: GroceryAppColors.tela,
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                        top: 10.0, bottom: 11.0),
-                                    height: 40,
-                                    width: 140,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                      ),
-//                                    borderRadius: BorderRadius.(10.0),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        widget.invoice,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontStyle: FontStyle.normal,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  )
+                                  child: Icon(
+                                    Icons.receipt_long,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: 40),
+
+                          // Continue Shopping Button
+                          Container(
+                            width: double.infinity,
+                            height: 55,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  GroceryAppColors.tela,
+                                  GroceryAppColors.tela1,
+                                  GroceryAppColors.tela,
                                 ],
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  GroceryApp()),
-                                          (route) => false);
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(builder: (context) => GroceryApp()),
-                                      // );
-                                    },
-                                    child: Center(
-                                      child: Text(
-                                        "Continue Shopping ?",
-                                        overflow: TextOverflow.ellipsis,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: GroceryAppColors.tela.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 8,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(15),
+                                onTap: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) => GroceryApp()),
+                                      (route) => false);
+                                },
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.shopping_cart_outlined,
+                                        color: Colors.white,
+                                        size: 22,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        "Continue Shopping",
                                         style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.blue,
+                                          fontSize: 16,
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              )
-                            ],
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),

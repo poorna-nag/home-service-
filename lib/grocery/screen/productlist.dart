@@ -1,18 +1,14 @@
-import 'dart:developer';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:aladdinmart/constent/app_constent.dart';
-import 'package:aladdinmart/grocery/Auth/signin.dart';
-import 'package:aladdinmart/grocery/BottomNavigation/wishlist.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/dbhelper/CarrtDbhelper.dart';
-import 'package:aladdinmart/grocery/dbhelper/database_helper.dart';
-import 'package:aladdinmart/grocery/model/productmodel.dart';
-import 'package:aladdinmart/grocery/screen/SearchScreen.dart';
-import 'package:aladdinmart/grocery/screen/detailpage.dart';
+import 'package:EcoShine24/constent/app_constent.dart';
+import 'package:EcoShine24/grocery/Auth/signin.dart';
+import 'package:EcoShine24/grocery/BottomNavigation/wishlist.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/dbhelper/CarrtDbhelper.dart';
+import 'package:EcoShine24/grocery/dbhelper/database_helper.dart';
+import 'package:EcoShine24/grocery/model/productmodel.dart';
+import 'package:EcoShine24/grocery/screen/SearchScreen.dart';
+import 'package:EcoShine24/grocery/screen/detailpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductList extends StatefulWidget {
@@ -94,9 +90,12 @@ class _ProductListState extends State<ProductList>
         });
       });
     } else {
-      DatabaseHelper.getTopProduct(widget.cat, "100").then((usersFromServe) {
+      // Fixed: getTopProduct(deals_type, category_id)
+      // First parameter is deals type (empty for all), second is category ID
+      DatabaseHelper.getTopProduct("", widget.cat).then((usersFromServe) {
         setState(() {
           products1 = usersFromServe!;
+          print("${products1.length}itemCount");
         });
       });
     }
@@ -109,7 +108,20 @@ class _ProductListState extends State<ProductList>
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: GroceryAppColors.tela,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    GroceryAppColors.boxColor1,
+                    GroceryAppColors.boxColor2
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
             leading: Padding(
                 padding: EdgeInsets.only(left: 0.0),
                 child: InkWell(
@@ -121,9 +133,9 @@ class _ProductListState extends State<ProductList>
                     }
                   },
                   child: Icon(
-                    Icons.arrow_back,
-                    size: 30,
-                    color: Colors.white,
+                    Icons.arrow_back_ios,
+                    size: 24,
+                    color: GroceryAppColors.white,
                   ),
                 )),
             actions: <Widget>[
@@ -135,51 +147,15 @@ class _ProductListState extends State<ProductList>
                   );
                 },
                 child: Padding(
-                  padding: EdgeInsets.only(top: 0, right: 10),
+                  padding: EdgeInsets.only(top: 0, right: 16),
                   child: Icon(
                     Icons.search,
-                    color: Colors.white,
-                    size: 25,
+                    color: GroceryAppColors.white,
+                    size: 24,
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => WishList()),
-                  );
-                },
-                child: Stack(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 13, right: 30),
-                      child: Icon(
-                        Icons.add_shopping_cart,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 15, bottom: 18),
-                        child: Container(
-                          padding: const EdgeInsets.all(5.0),
-                          decoration: new BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: GroceryAppColors.homeiconcolor,
-                            // color: Colors.orange,
-                          ),
-                          child: Text('${cc}',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 15.0)),
-                        ),
-                      ),
-                    ),
-                    // showcartCircle(),
-                  ],
-                ),
-              )
+              // Cart icon removed from AppBar as per client requirement
             ],
             title: Text(
                 widget.title.isEmpty
@@ -187,11 +163,14 @@ class _ProductListState extends State<ProductList>
                     : widget.title,
                 style: TextStyle(
                     color: GroceryAppColors.white,
-                    fontSize: 18,
+                    fontSize: 20,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.bold)),
           ),
           body: Container(
+            decoration: BoxDecoration(
+              color: GroceryAppColors.bg,
+            ),
             child: Column(
               children: <Widget>[
                 /*Row(
@@ -214,174 +193,196 @@ class _ProductListState extends State<ProductList>
           ),*/
 
                 Expanded(
-                  child: products1 != null
-                      ? products1.length > 0
-                          ? ListView.builder(
-                              shrinkWrap: true,
-                              primary: false,
-                              scrollDirection: Axis.vertical,
-                              itemCount: products1.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Stack(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          left: 10,
-                                          right: 10,
-                                          top: 6,
-                                          bottom: 6),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8))),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProductDetails(
-                                                        products1[index])),
-                                          );
-                                        },
-                                        child: Container(
-                                          child: Row(
-                                            children: <Widget>[
-                                              Container(
-                                                margin: EdgeInsets.only(
-                                                    right: 8,
-                                                    left: 8,
-                                                    top: 8,
-                                                    bottom: 8),
-                                                width: 110,
-                                                height: 110,
-                                                decoration: BoxDecoration(
-                                                    // border: Border.all(
-                                                    //     color: GroceryAppColors
-                                                    //         .tela),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                14)),
-                                                    color: Colors.blue.shade200,
-                                                    image: DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: NetworkImage(
-                                                          products1[index]
-                                                                      .img !=
-                                                                  null
-                                                              ? GroceryAppConstant
-                                                                      .Product_Imageurl +
-                                                                  products1[
-                                                                          index]
-                                                                      .img
-                                                                      .toString()
-                                                              : "ttps://www.drawplanet.cz/wp-content/uploads/2019/10/dsc-0009-150x100.jpg",
-                                                        ))),
-                                              ),
-                                              Expanded(
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                  child: products1.length > 0
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          itemCount: products1.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Stack(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      left: 10, right: 10, top: 6, bottom: 6),
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          GroceryAppColors.white,
+                                          GroceryAppColors.bg
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(12)),
+                                      border: Border.all(
+                                        color: GroceryAppColors.boxColor1
+                                            .withOpacity(0.2),
+                                        width: 1,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: GroceryAppColors.boxColor1
+                                              .withOpacity(0.1),
+                                          blurRadius: 8,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ]),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductDetails(
+                                                    products1[index])),
+                                      );
+                                    },
+                                    child: Container(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                right: 8,
+                                                left: 8,
+                                                top: 8,
+                                                bottom: 8),
+                                            width: 110,
+                                            height: 110,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(14)),
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    GroceryAppColors.boxColor1
+                                                        .withOpacity(0.1),
+                                                    GroceryAppColors.boxColor2
+                                                        .withOpacity(0.1),
+                                                  ],
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                ),
+                                                border: Border.all(
+                                                  color: GroceryAppColors
+                                                      .boxColor1
+                                                      .withOpacity(0.3),
+                                                  width: 1,
+                                                ),
+                                                image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: NetworkImage(
+                                                      products1[index].img !=
+                                                              null
+                                                          ? GroceryAppConstant
+                                                                  .Product_Imageurl +
+                                                              products1[index]
+                                                                  .img
+                                                                  .toString()
+                                                          : "https://www.bigwelt.com/manage/uploads/gallery/no-img.png",
+                                                    ))),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Container(
+                                                    child: Text(
+                                                      products1[index]
+                                                                  .productName ==
+                                                              null
+                                                          ? 'name'
+                                                          : products1[index]
+                                                                  .productName ??
+                                                              "",
+                                                      overflow:
+                                                          TextOverflow.fade,
+                                                      style: TextStyle(
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              color:
+                                                                  GroceryAppColors
+                                                                      .boxColor1)
+                                                          .copyWith(
+                                                              fontSize: 14),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 6),
+                                                  Row(
                                                     children: <Widget>[
-                                                      Container(
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                top: 2.0,
+                                                                bottom: 1),
                                                         child: Text(
-                                                          products1[index]
-                                                                      .productName ==
-                                                                  null
-                                                              ? 'name'
-                                                              : products1[index]
-                                                                      .productName ??
-                                                                  "",
-                                                          overflow:
-                                                              TextOverflow.fade,
-                                                          style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: Colors
-                                                                      .black)
-                                                              .copyWith(
-                                                                  fontSize: 14),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: 6),
-                                                      Row(
-                                                        children: <Widget>[
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 2.0,
-                                                                    bottom: 1),
-                                                            child: Text(
-                                                                '\u{20B9} ${calDiscount(products1[index].buyPrice ?? "", products1[index].discount ?? "")} ${products1[index].unit_type != null ? "/" + products1[index].unit_type.toString() : ""}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color:
-                                                                      GroceryAppColors
-                                                                          .sellp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                )),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 20,
-                                                          ),
-                                                          Expanded(
-                                                            child: Text(
-                                                              '(\u{20B9} ${products1[index].buyPrice})',
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 2,
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  fontStyle:
-                                                                      FontStyle
-                                                                          .italic,
-                                                                  color:
-                                                                      GroceryAppColors
-                                                                          .mrp,
-                                                                  decoration:
-                                                                      TextDecoration
-                                                                          .lineThrough),
-                                                            ),
-                                                          )
-                                                        ],
+                                                            '\u{20B9} ${calDiscount(products1[index].buyPrice ?? "", products1[index].discount ?? "")} ${products1[index].unit_type != null ? "/" + products1[index].unit_type.toString() : ""}',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  GroceryAppColors
+                                                                      .boxColor1,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: 16,
+                                                            )),
                                                       ),
                                                       SizedBox(
-                                                        width: 0.0,
-                                                        height: 10.0,
+                                                        width: 20,
                                                       ),
-                                                      Container(
-                                                        margin: EdgeInsets.only(
-                                                            left: 0.0,
-                                                            right: 10),
-                                                        child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .end,
-                                                            children: <Widget>[
-                                                              // Column(
-                                                              //   children: <
-                                                              //       Widget>[
-                                                              //     Row(
-                                                              //       mainAxisAlignment:
-                                                              //           MainAxisAlignment
-                                                              //               .end,
-                                                              //       children: <
-                                                              //           Widget>[
+                                                      Expanded(
+                                                        child: Text(
+                                                          '(\u{20B9} ${products1[index].buyPrice})',
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 2,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic,
+                                                              color: GroceryAppColors
+                                                                  .boxColor2
+                                                                  .withOpacity(
+                                                                      0.7),
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    width: 0.0,
+                                                    height: 10.0,
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 0.0, right: 10),
+                                                    child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: <Widget>[
+                                                          // Column(
+                                                          //   children: <
+                                                          //       Widget>[
+                                                          //     Row(
+                                                          //       mainAxisAlignment:
+                                                          //           MainAxisAlignment
+                                                          //               .end,
+                                                          //       children: <
+                                                          //           Widget>[
 //                                                                       Container(
 //                                                                           height:
 //                                                                               25,
@@ -496,82 +497,284 @@ class _ProductListState extends State<ProductList>
 //                                                               ),
 //                                                               // SizedBox(width: 10,),
 
-                                                              Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .end,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .end,
-                                                                children: <
-                                                                    Widget>[
-                                                                  Material(
-                                                                    color: GroceryAppColors
-                                                                        .tela1,
-                                                                    elevation:
-                                                                        0.0,
-                                                                    shape:
-                                                                        RoundedRectangleBorder(
-                                                                      side:
-                                                                          BorderSide(
-                                                                        color: GroceryAppColors
-                                                                            .tela1,
-                                                                      ),
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .all(
-                                                                        Radius.circular(
-                                                                            2),
-                                                                      ),
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  gradient:
+                                                                      LinearGradient(
+                                                                    colors: [
+                                                                      GroceryAppColors
+                                                                          .boxColor1,
+                                                                      GroceryAppColors
+                                                                          .boxColor2
+                                                                    ],
+                                                                    begin: Alignment
+                                                                        .topLeft,
+                                                                    end: Alignment
+                                                                        .bottomRight,
+                                                                  ),
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              8)),
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                      color: GroceryAppColors
+                                                                          .boxColor1
+                                                                          .withOpacity(
+                                                                              0.3),
+                                                                      blurRadius:
+                                                                          4,
+                                                                      offset:
+                                                                          Offset(
+                                                                              0,
+                                                                              2),
                                                                     ),
-                                                                    clipBehavior:
-                                                                        Clip.antiAlias,
-                                                                    child:
-                                                                        InkWell(
-                                                                      onTap:
-                                                                          () async {
-                                                                        SharedPreferences
-                                                                            pref =
-                                                                            await SharedPreferences.getInstance();
-                                                                        if (GroceryAppConstant
-                                                                            .isLogin) {
-                                                                          String
-                                                                              mrp_price =
-                                                                              calDiscount(products1[index].buyPrice ?? "", products1[index].discount ?? "");
-                                                                          totalmrp =
-                                                                              double.parse(mrp_price);
+                                                                  ],
+                                                                ),
+                                                                child: Material(
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap:
+                                                                        () async {
+                                                                      SharedPreferences
+                                                                          pref =
+                                                                          await SharedPreferences
+                                                                              .getInstance();
+                                                                      if (GroceryAppConstant
+                                                                          .isLogin) {
+                                                                        String mrp_price = calDiscount(
+                                                                            products1[index].buyPrice ??
+                                                                                "",
+                                                                            products1[index].discount ??
+                                                                                "");
+                                                                        totalmrp =
+                                                                            double.parse(mrp_price);
 
-                                                                          double
-                                                                              dicountValue =
-                                                                              double.parse(products1[index].buyPrice ?? "") - totalmrp!;
-                                                                          String
-                                                                              gst_sgst =
-                                                                              calGst(mrp_price, products1[index].sgst ?? "");
-                                                                          String
-                                                                              gst_cgst =
-                                                                              calGst(mrp_price, products1[index].cgst ?? "");
+                                                                        double
+                                                                            dicountValue =
+                                                                            double.parse(products1[index].buyPrice ?? "") -
+                                                                                totalmrp!;
+                                                                        String gst_sgst = calGst(
+                                                                            mrp_price,
+                                                                            products1[index].sgst ??
+                                                                                "");
+                                                                        String gst_cgst = calGst(
+                                                                            mrp_price,
+                                                                            products1[index].cgst ??
+                                                                                "");
 
-                                                                          String
-                                                                              adiscount =
-                                                                              calDiscount(products1[index].buyPrice ?? "", products1[index].msrp != null ? products1[index].msrp ?? "" : "0");
+                                                                        String adiscount = calDiscount(
+                                                                            products1[index].buyPrice ??
+                                                                                "",
+                                                                            products1[index].msrp != null
+                                                                                ? products1[index].msrp ?? ""
+                                                                                : "0");
 
-                                                                          admindiscountprice =
-                                                                              (double.parse(products1[index].buyPrice ?? "") - double.parse(adiscount));
+                                                                        admindiscountprice =
+                                                                            (double.parse(products1[index].buyPrice ?? "") -
+                                                                                double.parse(adiscount));
 
-                                                                          String
-                                                                              color =
-                                                                              "";
-                                                                          String
-                                                                              size =
-                                                                              "";
-                                                                          _addToproducts(
+                                                                        String
+                                                                            color =
+                                                                            "";
+                                                                        String
+                                                                            size =
+                                                                            "";
+                                                                        _addToproducts(
+                                                                          products1[index].productIs ??
+                                                                              "",
+                                                                          products1[index].productName ??
+                                                                              "",
+                                                                          products1[index].img ??
+                                                                              "",
+                                                                          int.parse(
+                                                                              mrp_price),
+                                                                          int.parse(products1[index].count ??
+                                                                              ""),
+                                                                          color,
+                                                                          size,
+                                                                          products1[index].productDescription ??
+                                                                              "",
+                                                                          gst_sgst,
+                                                                          gst_cgst,
+                                                                          products1[index].discount ??
+                                                                              "",
+                                                                          dicountValue
+                                                                              .toString(),
+                                                                          products1[index].APMC ??
+                                                                              "",
+                                                                          admindiscountprice
+                                                                              .toString(),
+                                                                          products1[index].buyPrice ??
+                                                                              "",
+                                                                          products1[index].shipping ??
+                                                                              "",
+                                                                          products1[index].quantityInStock ??
+                                                                              "",
+                                                                        );
+
+                                                                        setState(
+                                                                            () {
+//                                                                              cartvalue++;
+                                                                          GroceryAppConstant
+                                                                              .groceryAppCartItemCount++;
+                                                                          groceryCartItemCount(
+                                                                              GroceryAppConstant.groceryAppCartItemCount);
+                                                                        });
+                                                                        setState(
+                                                                            () {
+                                                                          AppConstent
+                                                                              .cc++;
+
+                                                                          pref.setInt(
+                                                                              "cc",
+                                                                              AppConstent.cc);
+                                                                        });
+
+//                                                                Navigator.push(context,
+//                                                                  MaterialPageRoute(builder: (context) => MyApp1()),);
+                                                                      } else {
+                                                                        Navigator
+                                                                            .push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => SignInPage()),
+                                                                        );
+                                                                      }
+
+//
+                                                                    },
+                                                                    child: Padding(
+                                                                        padding: EdgeInsets.only(left: 20, top: 8, bottom: 8, right: 20),
+                                                                        child: Center(
+                                                                          child:
+                                                                              Text(
+                                                                            "Add service",
+                                                                            style: TextStyle(
+                                                                                color: GroceryAppColors.white,
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                          // Icon(Icons.add_shopping_cart,color: Colors.white,),
+                                                                        )),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Container(
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    left: 5.0),
+                                                            height: 40,
+                                                            // width: 60,
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  colors: [
+                                                                    GroceryAppColors
+                                                                        .tela1,
+                                                                    GroceryAppColors
+                                                                        .tela
+                                                                  ],
+                                                                  begin: Alignment
+                                                                      .topLeft,
+                                                                  end: Alignment
+                                                                      .bottomRight,
+                                                                ),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            15)),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                    color: GroceryAppColors
+                                                                        .tela
+                                                                        .withOpacity(
+                                                                            0.3),
+                                                                    blurRadius:
+                                                                        4,
+                                                                    offset:
+                                                                        Offset(
+                                                                            0,
+                                                                            2),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              child: Card(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                elevation: 0.0,
+                                                                clipBehavior: Clip
+                                                                    .antiAlias,
+                                                                child: InkWell(
+                                                                  onTap:
+                                                                      () async {
+                                                                    SharedPreferences
+                                                                        pref =
+                                                                        await SharedPreferences
+                                                                            .getInstance();
+                                                                    if (GroceryAppConstant
+                                                                        .isLogin) {
+                                                                      if (num.parse(products1[index].quantityInStock ??
+                                                                              '0') >
+                                                                          0) {
+                                                                        String mrp_price = calDiscount(
+                                                                            products1[index].buyPrice ??
+                                                                                "",
+                                                                            products1[index].discount ??
+                                                                                "");
+                                                                        totalmrp =
+                                                                            double.parse(mrp_price);
+                                                                        double
+                                                                            dicountValue =
+                                                                            double.parse(products1[index].buyPrice ?? "") -
+                                                                                totalmrp!;
+                                                                        String gst_sgst = calGst(
+                                                                            mrp_price,
+                                                                            products1[index].sgst ??
+                                                                                "");
+                                                                        String gst_cgst = calGst(
+                                                                            mrp_price,
+                                                                            products1[index].cgst ??
+                                                                                "");
+                                                                        String adiscount = calDiscount(
+                                                                            products1[index].buyPrice ??
+                                                                                "",
+                                                                            products1[index].msrp != null
+                                                                                ? products1[index].msrp ?? ""
+                                                                                : "0");
+                                                                        admindiscountprice =
+                                                                            (double.parse(products1[index].buyPrice ?? "") -
+                                                                                double.parse(adiscount));
+                                                                        String
+                                                                            color =
+                                                                            "";
+                                                                        String
+                                                                            size =
+                                                                            "";
+                                                                        _addToproducts1(
                                                                             products1[index].productIs ??
                                                                                 "",
                                                                             products1[index].productName ??
                                                                                 "",
                                                                             products1[index].img ??
                                                                                 "",
-                                                                            int.parse(mrp_price),
+                                                                            int.parse(
+                                                                                mrp_price),
                                                                             int.parse(products1[index].count ??
                                                                                 ""),
                                                                             color,
@@ -582,170 +785,100 @@ class _ProductListState extends State<ProductList>
                                                                             gst_cgst,
                                                                             products1[index].discount ??
                                                                                 "",
-                                                                            dicountValue.toString(),
+                                                                            dicountValue
+                                                                                .toString(),
                                                                             products1[index].APMC ??
                                                                                 "",
-                                                                            admindiscountprice.toString(),
+                                                                            admindiscountprice
+                                                                                .toString(),
                                                                             products1[index].buyPrice ??
                                                                                 "",
                                                                             products1[index].shipping ??
                                                                                 "",
                                                                             products1[index].quantityInStock ??
                                                                                 "",
-                                                                          );
-
-                                                                          setState(
-                                                                              () {
-//                                                                              cartvalue++;
-                                                                            GroceryAppConstant.groceryAppCartItemCount++;
-                                                                            groceryCartItemCount(GroceryAppConstant.groceryAppCartItemCount);
-                                                                          });
-                                                                          setState(
-                                                                              () {
-                                                                            AppConstent.cc++;
-
-                                                                            pref.setInt("cc",
-                                                                                AppConstent.cc);
-                                                                          });
-
-//                                                                Navigator.push(context,
-//                                                                  MaterialPageRoute(builder: (context) => MyApp1()),);
-                                                                        } else {
-                                                                          Navigator
-                                                                              .push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder: (context) => SignInPage()),
-                                                                          );
-                                                                        }
-
-//
-                                                                      },
-                                                                      child: Padding(
-                                                                          padding: EdgeInsets.only(left: 20, top: 8, bottom: 8, right: 20),
+                                                                            products1[index].youtube ??
+                                                                                "",
+                                                                            products1[index].mv ??
+                                                                                "");
+                                                                        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                                        //   content: Text("Service added to cart"),
+                                                                        //   backgroundColor: Colors.green,
+                                                                        //   behavior: SnackBarBehavior.floating,
+                                                                        // ));
+                                                                        await Navigator
+                                                                            .push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => WishList()),
+                                                                        );
+                                                                        setState(
+                                                                            () {});
+                                                                        // Navigator.push(
+                                                                        //   context,
+                                                                        //   MaterialPageRoute(builder: (context) => ShowAddress("0")),
+                                                                        // );
+                                                                        // setState(() {
+                                                                        //                 AppConstant.cc++;
+                                                                        //   Constant.carditemCount++;
+                                                                        //   cartItemcount(Constant.carditemCount);
+                                                                        // });
+                                                                        // Navigator.push(
+                                                                        //   context,
+                                                                        //   MaterialPageRoute(builder: (context) => MyApp1()),
+                                                                        // );
+                                                                      } else {
+                                                                        showLongToast(
+                                                                            "Product is out of stock");
+                                                                      }
+                                                                    } else {
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                SignInPage()),
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                  child:
+                                                                      Padding(
+                                                                          padding: EdgeInsets.only(
+                                                                              left: 5,
+                                                                              top: 3.5,
+                                                                              bottom: 3.5,
+                                                                              right: 5),
                                                                           child: Center(
                                                                             child:
                                                                                 Text(
-                                                                              "Add service",
-                                                                              style: TextStyle(color: GroceryAppColors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                                                                              "Book Now",
+                                                                              style: TextStyle(color: GroceryAppColors.white, fontSize: 10, fontWeight: FontWeight.bold),
                                                                             ),
                                                                             // Icon(Icons.add_shopping_cart,color: Colors.white,),
                                                                           )),
-                                                                    ),
-                                                                  ),
-                                                                ],
+                                                                ),
                                                               ),
-                                                               Container(
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            left:
-                                                                                5.0),
-                                                                    height: 40,
-                                                                    // width: 60,
-                                                                    child: Card(
-                                                                      color: GroceryAppColors
-                                                                          .sellp,
-                                                                      elevation:
-                                                                          0.0,
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        side:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              GroceryAppColors.sellp,
-                                                                        ),
-                                                                        borderRadius:
-                                                                            BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              15),
-                                                                        ),
-                                                                      ),
-                                                                      clipBehavior:
-                                                                          Clip.antiAlias,
-                                                                      child:
-                                                                          InkWell(
-                                                                        onTap:
-                                                                            () async {
-                                                                          SharedPreferences pref = await SharedPreferences.getInstance();
-                                                                          if (GroceryAppConstant
-                                                                              .isLogin) {
-                                                                            if (num.parse(products1[index].quantityInStock ?? '0') >
-                                                                                0) {
-                                                                              String mrp_price = calDiscount(products1[index].buyPrice ?? "", products1[index].discount ?? "");
-                                                                              totalmrp = double.parse(mrp_price);
-                                                                              double dicountValue = double.parse(products1[index].buyPrice ?? "") - totalmrp!;
-                                                                              String gst_sgst = calGst(mrp_price, products1[index].sgst ?? "");
-                                                                              String gst_cgst = calGst(mrp_price, products1[index].cgst ?? "");
-                                                                              String adiscount = calDiscount(products1[index].buyPrice ?? "", products1[index].msrp != null ? products1[index].msrp ?? "" : "0");
-                                                                              admindiscountprice = (double.parse(products1[index].buyPrice ?? "") - double.parse(adiscount));
-                                                                              String color = "";
-                                                                              String size = "";
-                                                                              _addToproducts1(products1[index].productIs ?? "", products1[index].productName ?? "", products1[index].img ?? "", int.parse(mrp_price), int.parse(products1[index].count ?? ""), color, size, products1[index].productDescription ?? "", gst_sgst, gst_cgst, products1[index].discount ?? "", dicountValue.toString(), products1[index].APMC ?? "", admindiscountprice.toString(), products1[index].buyPrice ?? "", products1[index].shipping ?? "", products1[index].quantityInStock ?? "", products1[index].youtube ?? "", products1[index].mv ?? "");
-                                                                              // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                                                              //   content: Text("Service added to cart"),
-                                                                              //   backgroundColor: Colors.green,
-                                                                              //   behavior: SnackBarBehavior.floating,
-                                                                              // ));
-                                                                            await Navigator.push(
-                                                                                context,
-                                                                                MaterialPageRoute(builder: (context) => WishList()),
-                                                                              );
-                                                                              setState(() {});
-                                                                              // Navigator.push(
-                                                                              //   context,
-                                                                              //   MaterialPageRoute(builder: (context) => ShowAddress("0")),
-                                                                              // );
-                                                                              // setState(() {
-                                                                              //                 AppConstant.cc++;
-                                                                              //   Constant.carditemCount++;
-                                                                              //   cartItemcount(Constant.carditemCount);
-                                                                              // });
-                                                                              // Navigator.push(
-                                                                              //   context,
-                                                                              //   MaterialPageRoute(builder: (context) => MyApp1()),
-                                                                              // );
-                                                                            } else {
-                                                                              showLongToast("Product is out of stock");
-                                                                            }
-                                                                          } else {
-                                                                            Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(builder: (context) => SignInPage()),
-                                                                            );
-                                                                          }
-                                                                        },
-                                                                        child: Padding(
-                                                                            padding: EdgeInsets.only(left: 5, top: 3.5, bottom: 3.5, right: 5),
-                                                                            child: Center(
-                                                                              child: Text(
-                                                                                "Book Now",
-                                                                                style: TextStyle(color: GroceryAppColors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                                                                              ),
-                                                                              // Icon(Icons.add_shopping_cart,color: Colors.white,),
-                                                                            )),
-                                                                      ),
-                                                                    ),
-                                                                    )
-                                                            ]),
-                                                      ),
-                                                    ],
+                                                            ),
+                                                          )
+                                                        ]),
                                                   ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
-                                    double.parse(products1[index].discount ??
-                                                "") >
-                                            0
-                                        ? showSticker(index, products1)
-                                        : Row(),
-                                  ],
-                                );
-                              },
-                            )
-                          : Center(child: CircularProgressIndicator())
+                                  ),
+                                ),
+                                double.parse(products1[index].discount ?? "") >
+                                        0
+                                    ? showSticker(index, products1)
+                                    : Row(),
+                              ],
+                            );
+                          },
+                        )
                       : Center(child: CircularProgressIndicator()),
                 ),
               ],
@@ -777,7 +910,7 @@ class _ProductListState extends State<ProductList>
   ProductsCart? products2;
 //cost_price=buyprice
 
- void _addToproducts1(
+  void _addToproducts1(
       String pID,
       String p_name,
       String image,
@@ -803,8 +936,8 @@ class _ProductListState extends State<ProductList>
         pimage: image,
         pprice: (price * quantity).toString(),
         pQuantity: quantity,
-        pcolor: c_val ?? "",
-        psize: p_size ?? "",
+        pcolor: c_val,
+        psize: p_size,
         pdiscription: p_disc,
         sgst: sgst,
         cgst: cgst,

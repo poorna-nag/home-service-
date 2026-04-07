@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
 
 class CustomAppBar extends StatelessWidget {
   @override
@@ -12,7 +12,8 @@ class CustomAppBar extends StatelessWidget {
         width: width,
         padding: EdgeInsets.only(left: 15, top: 25),
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [GroceryAppColors.boxColor1, GroceryAppColors.boxColor2]),
+          gradient: LinearGradient(
+              colors: [GroceryAppColors.boxColor1, GroceryAppColors.boxColor2]),
         ),
         /*child: Row(
           children: <Widget>[

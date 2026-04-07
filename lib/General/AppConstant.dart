@@ -1,17 +1,15 @@
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:aladdinmart/model/CategaryModal.dart';
+import 'package:EcoShine24/model/CategaryModal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FoodAppConstant {
-  static String appname = "OHO";
-  static const String packageName = "com.ohouserapp";
-  static const String iosAppLink = "com.ohouserapp";
-  static const String base_url = "https://oho.w4u.in/";
-  static const String API_KEY = "A4EXVM96WD5F7N8RUKPJBLGYS2TCQHZ3";
-  static const String Shop_id = "35458"; 
+  static String appname = "Trusted Home Caring";
+  static const String packageName = "com.homeserviceappbigweltdemoapp";
+  static const String iosAppLink = "com.homeserviceappbigweltdemoapp";
+  static const String base_url = "https://homeserviceapp.w4u.in/";
+  static const String API_KEY = "HEJZB52M6U3RWDS8YNX7ATQFVKGP94LC";
+  static const String Shop_id = "35956";
   static const String registration = "user.php";
   static const String post = "post.php";
   static const String Subscription = "subscription.php";
@@ -62,6 +60,61 @@ class FoodAppConstant {
   static double shipingAmount = 0;
   static List<Categary> list = [];
   static setvalue() {}
+
+  // Helper function to get category image widget with fallback
+  static Widget getCategoryImageWidget(String? imageUrl,
+      {BoxFit fit = BoxFit.fill, double? width, double? height}) {
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      return Image.network(
+        base_url + "manage/uploads/mv_cats/" + imageUrl,
+        fit: fit,
+        width: width,
+        height: height,
+        errorBuilder: (context, error, stackTrace) {
+          return _getNoImageWidget(width: width, height: height);
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return _getNoImageWidget(width: width, height: height);
+        },
+      );
+    } else {
+      return _getNoImageWidget(width: width, height: height);
+    }
+  }
+
+  // Helper function for no image widget
+  static Widget _getNoImageWidget({double? width, double? height}) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: FoodAppColors.lightGray.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.image_not_supported,
+            size: (width != null && width < 60) ? 20 : 40,
+            color: FoodAppColors.darkGray,
+          ),
+          if (width == null || width >= 60)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                "No Image",
+                style: TextStyle(
+                  fontSize: 10,
+                  color: FoodAppColors.darkGray,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class FoodAppColors {

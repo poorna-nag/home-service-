@@ -2,11 +2,12 @@ import 'dart:async';
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/Auth/signin.dart';
-import 'package:aladdinmart/grocery/General/Home.dart';
-import 'package:aladdinmart/model/productmodel.dart';
+import 'package:EcoShine24/Auth/signin.dart';
+import 'package:EcoShine24/grocery/General/Home.dart';
+import 'package:EcoShine24/model/productmodel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_player/video_player.dart';
 import 'AppConstant.dart';
 
 class AnimatedSplashScreen extends StatefulWidget {
@@ -21,6 +22,8 @@ class SplashScreenState extends State<AnimatedSplashScreen>
 
   var _visible = true;
   String? logincheck;
+  VideoPlayerController? playerController;
+  VoidCallback? listener;
 
   void checkLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -64,11 +67,12 @@ class SplashScreenState extends State<AnimatedSplashScreen>
   AnimationController? animationController;
   Animation<double>? animation;
   startTime() async {
-    var _duration = new Duration(seconds: 2);
+    var _duration = new Duration(seconds: 5);
     return new Timer(_duration, navigationPage);
   }
 
   void navigationPage() {
+    playerController?.setVolume(0.0);
     checkLogin();
 
     // Navigator.pushAndRemoveUntil(
@@ -81,6 +85,17 @@ class SplashScreenState extends State<AnimatedSplashScreen>
           context,
           MaterialPageRoute(builder: (context) => LoginPage()),
         );*/
+  }
+
+  void initializeVideo() {
+    // GIF files are images, not videos. Using Image.asset instead.
+    // If you want to use a video, convert the GIF to MP4 format
+    // playerController = VideoPlayerController.asset('assets/videos/splash.mp4')
+    //   ..addListener(listener ?? () {})
+    //   ..setVolume(1.0)
+    //   ..setLooping(false)
+    //   ..initialize()
+    //   ..play();
   }
 
   Future<void> determinePosition() async {
@@ -102,6 +117,7 @@ class SplashScreenState extends State<AnimatedSplashScreen>
   void initState() {
     determinePosition();
     super.initState();
+    initializeVideo();
     animationController = new AnimationController(
         vsync: this, duration: new Duration(seconds: 2));
     animation = new CurvedAnimation(
@@ -146,22 +162,66 @@ class SplashScreenState extends State<AnimatedSplashScreen>
   }
 
   @override
+  void deactivate() {
+    if (playerController != null) {
+      playerController?.setVolume(0.0);
+      playerController?.removeListener(listener ?? () {});
+    }
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    playerController?.dispose();
+    animationController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: FoodAppColors.white,
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/splash.gif"), fit: BoxFit.fill),
-        ),
-        // child: new Image.asset(
-        //   'assets/videos/splash.gif',
-        //   width: MediaQuery.of(context).size.width,
-        //   height: MediaQuery.of(context).size.height,
-        // ),
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/videos/Home services flash screen.gif',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: Colors.black,
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/icon/Home services 1.png',
+                        width: 180,
+                        height: 180,
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        FoodAppConstant.appname,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
+      // child: new Image.asset(
+      //   'assets/videos/splash.gif',
+      //   width: MediaQuery.of(context).size.width,
+      //   height: MediaQuery.of(context).size.height,
+      // ),
 
 //       Stack(
 //         fit: StackFit.expand,

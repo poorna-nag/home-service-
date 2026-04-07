@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:aladdinmart/grocery/Auth/signin.dart';
-import 'package:aladdinmart/grocery/BottomNavigation/wishlist.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/dbhelper/CarrtDbhelper.dart';
-import 'package:aladdinmart/grocery/dbhelper/database_helper.dart';
-import 'package:aladdinmart/grocery/model/productmodel.dart';
+import 'package:EcoShine24/grocery/Auth/signin.dart';
+import 'package:EcoShine24/grocery/BottomNavigation/wishlist.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/dbhelper/CarrtDbhelper.dart';
+import 'package:EcoShine24/grocery/dbhelper/database_helper.dart';
+import 'package:EcoShine24/grocery/model/productmodel.dart';
 import 'package:flutter_pagewise/flutter_pagewise.dart';
 
-import 'package:aladdinmart/grocery/screen/SearchScreen.dart';
-import 'package:aladdinmart/grocery/screen/detailpage.dart';
+import 'package:EcoShine24/grocery/screen/SearchScreen.dart';
+import 'package:EcoShine24/grocery/screen/detailpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Screen2 extends StatefulWidget {
@@ -76,43 +76,7 @@ class _ScreenState extends State<Screen2> {
               ),
             ),
           ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => WishList()),
-              );
-            },
-            child: Stack(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 13, right: 30),
-                  child: Icon(
-                    Icons.add_shopping_cart,
-                    color: Colors.white,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 15, bottom: 18),
-                    child: Container(
-                      padding: const EdgeInsets.all(5.0),
-                      decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: GroceryAppColors.telamoredeep,
-                        // color: Colors.blue,
-                      ),
-                      child: Text(
-                          '${GroceryAppConstant.groceryAppCartItemCount}',
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 15.0)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
+          // Cart icon removed from AppBar as per client requirement
         ],
         title: Text(widget.title!.isEmpty ? " " : widget.title!,
             style: TextStyle(
@@ -154,10 +118,10 @@ class _ScreenState extends State<Screen2> {
     return Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 6, bottom: 6),
       decoration: BoxDecoration(
-          // color: AppColors.tela1,
-
+          color: GroceryAppColors.tela1,
           borderRadius: BorderRadius.all(Radius.circular(16))),
       child: Card(
+        color: GroceryAppColors.tela1,
         child: InkWell(
           onTap: () {
             Navigator.push(
@@ -175,7 +139,7 @@ class _ScreenState extends State<Screen2> {
                   decoration: BoxDecoration(
                       border: Border.all(color: GroceryAppColors.tela),
                       borderRadius: BorderRadius.all(Radius.circular(14)),
-                      color: Colors.blue.shade200,
+                      color: GroceryAppColors.tela,
                       image: DecorationImage(
                           fit: BoxFit.cover,
                           image: entry.img != null
@@ -202,7 +166,7 @@ class _ScreenState extends State<Screen2> {
                             style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w400,
-                                    color: Colors.black)
+                                    color: GroceryAppColors.tela)
                                 .copyWith(fontSize: 15),
                           ),
                         ),
@@ -292,7 +256,7 @@ class _ScreenState extends State<Screen2> {
                                             // maxLines: 2,
                                             style: TextStyle(
                                               fontSize: 15,
-                                              color: GroceryAppColors.black,
+                                              color: GroceryAppColors.tela,
                                             ),
                                           ),
                                         ),
@@ -300,7 +264,7 @@ class _ScreenState extends State<Screen2> {
                                             padding: EdgeInsets.only(left: 0),
                                             child: Icon(
                                               Icons.expand_more,
-                                              color: Colors.black,
+                                              color: GroceryAppColors.tela,
                                               size: 30,
                                             ))
                                       ],
@@ -382,7 +346,8 @@ class _ScreenState extends State<Screen2> {
                                                     ? '${entry.count}'
                                                     : '$_count',
                                                 style: TextStyle(
-                                                    color: Colors.black,
+                                                    color:
+                                                        GroceryAppColors.tela,
                                                     fontSize: 15,
                                                     fontFamily: 'Roboto',
                                                     fontWeight:
@@ -429,7 +394,7 @@ class _ScreenState extends State<Screen2> {
                                                 child: Icon(
                                                   Icons.add,
                                                   size: 20,
-                                                  color: Colors.white,
+                                                  color: GroceryAppColors.white,
                                                 ),
                                               ),
                                             )),
@@ -752,7 +717,7 @@ class _ScreenState extends State<Screen2> {
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
                               width: snapshot.data![index] != 0 ? 130.0 : 230.0,
-                              color: Colors.white,
+                              color: GroceryAppColors.white,
                               margin: EdgeInsets.only(right: 10),
                               child: InkWell(
                                 onTap: () {

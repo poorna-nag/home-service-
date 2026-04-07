@@ -1,6 +1,6 @@
-import 'package:aladdinmart/grocery/General/Home.dart';
+import 'package:EcoShine24/grocery/General/Home.dart';
 import 'package:flutter/material.dart';
-import 'package:aladdinmart/General/AppConstant.dart';
+import 'package:EcoShine24/General/AppConstant.dart';
 
 class ShowInVoiceId extends StatefulWidget {
   final String invoice;
@@ -11,7 +11,7 @@ class ShowInVoiceId extends StatefulWidget {
 }
 
 class _ShowInVoiceIdState extends State<ShowInVoiceId> {
- _onBackPressed() {
+  _onBackPressed() {
     return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
@@ -43,16 +43,18 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId> {
     return WillPopScope(
       onWillPop: () => _onBackPressed(),
       child: Container(
+        color: FoodAppColors.tela1,
         child: AspectRatio(
           aspectRatio: 100 / 100,
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              color: Colors.teal[50],
+              color: FoodAppColors.tela1,
             ),
             child: Center(
               child: Container(
                 child: Card(
+                  color: FoodAppColors.tela,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -75,7 +77,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 15,
-                                color: Colors.black,
+                                color: FoodAppColors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -105,7 +107,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId> {
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             style: TextStyle(
-                                              color: Colors.green,
+                                              color: FoodAppColors.tela,
                                               fontWeight: FontWeight.w700,
                                             )),
                                       ),
@@ -129,7 +131,7 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontStyle: FontStyle.normal,
-                                          color: Colors.black,
+                                          color: FoodAppColors.white,
                                         ),
                                       ),
                                     ),
@@ -144,7 +146,8 @@ class _ShowInVoiceIdState extends State<ShowInVoiceId> {
                                       Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => GroceryApp()),
+                                              builder: (context) =>
+                                                  GroceryApp()),
                                           (route) => false);
                                     },
                                     child: Container(

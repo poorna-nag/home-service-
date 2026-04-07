@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/model/RegisterModel.dart';
-import 'package:aladdinmart/grocery/model/UserUpdateModel.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/model/UserUpdateModel.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../utils/phone_number_utils.dart';
 
 class EditProfilePage extends StatefulWidget {
   final String userid;
@@ -228,7 +227,7 @@ class _HomePageState extends State<EditProfilePage> {
                                   },
                                   child: CircleAvatar(
                                     radius: 70,
-                                    backgroundColor: Colors.orange,
+                                    backgroundColor: GroceryAppColors.tela,
                                     child: ClipOval(
                                       child: new SizedBox(
                                         width: 150.0,
@@ -336,18 +335,52 @@ class _HomePageState extends State<EditProfilePage> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   new Flexible(
-                                    child: TextFormField(
-                                      controller: nameController,
-                                      validator: (String? value) {
-                                        if (value == null || value.isEmpty) {
-                                          return " Please enter the name";
-                                        }
-                                      },
-                                      decoration: const InputDecoration(
-                                        hintText: "Enter Your Name",
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: GroceryAppColors.tela1
+                                                .withOpacity(0.1),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
                                       ),
-                                      enabled: !_status,
-                                      autofocus: !_status,
+                                      child: TextFormField(
+                                        controller: nameController,
+                                        validator: (String? value) {
+                                          if (value == null || value.isEmpty) {
+                                            return " Please enter the name";
+                                          }
+                                          return null;
+                                        },
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: GroceryAppColors.boxColor1,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        decoration: InputDecoration(
+                                          hintText: "Enter Your Name",
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey[500],
+                                            fontSize: 16,
+                                          ),
+                                          prefixIcon: Icon(
+                                            Icons.person_outline,
+                                            color: GroceryAppColors.tela1,
+                                            size: 20,
+                                          ),
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 15,
+                                          ),
+                                        ),
+                                        enabled: !_status,
+                                        autofocus: !_status,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -379,16 +412,51 @@ class _HomePageState extends State<EditProfilePage> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   new Flexible(
-                                    child: TextFormField(
-                                      controller: emailController,
-                                      validator: (String? value) {
-                                        if (value == null || value.isEmpty) {
-                                          return " Please enter the email id";
-                                        }
-                                      },
-                                      decoration: const InputDecoration(
-                                          hintText: "Enter Email ID"),
-                                      enabled: !_status,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: GroceryAppColors.tela1
+                                                .withOpacity(0.1),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: TextFormField(
+                                        controller: emailController,
+                                        validator: (String? value) {
+                                          if (value == null || value.isEmpty) {
+                                            return " Please enter the email id";
+                                          }
+                                          return null;
+                                        },
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: GroceryAppColors.boxColor1,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        decoration: InputDecoration(
+                                          hintText: "Enter Email ID",
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey[500],
+                                            fontSize: 16,
+                                          ),
+                                          prefixIcon: Icon(
+                                            Icons.email_outlined,
+                                            color: GroceryAppColors.tela1,
+                                            size: 20,
+                                          ),
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 15,
+                                          ),
+                                        ),
+                                        enabled: !_status,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -420,17 +488,50 @@ class _HomePageState extends State<EditProfilePage> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   new Flexible(
-                                    child: new TextFormField(
-                                      controller: mobileController,
-                                      keyboardType: TextInputType.number,
-                                      validator: (String? value) {
-                                        if (value == null || value.isEmpty) {
-                                          return " Please enter the mobile No";
-                                        }
-                                      },
-                                      decoration: const InputDecoration(
-                                          hintText: "Enter Mobile Number"),
-                                      enabled: true,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: GroceryAppColors.tela1
+                                                .withOpacity(0.1),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: TextFormField(
+                                        controller: mobileController,
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters:
+                                            PhoneNumberUtils.inputFormatters,
+                                        validator:
+                                            PhoneNumberUtils.validateMobile,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: GroceryAppColors.boxColor1,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        decoration: InputDecoration(
+                                          hintText: "Enter Mobile Number",
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey[500],
+                                            fontSize: 16,
+                                          ),
+                                          prefixIcon: Icon(
+                                            Icons.phone_outlined,
+                                            color: GroceryAppColors.tela1,
+                                            size: 20,
+                                          ),
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 15,
+                                          ),
+                                        ),
+                                        enabled: true,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -476,37 +577,110 @@ class _HomePageState extends State<EditProfilePage> {
                                   Flexible(
                                     child: Padding(
                                       padding: EdgeInsets.only(right: 10.0),
-                                      child: TextFormField(
-                                        controller: pincodeController,
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          FilteringTextInputFormatter
-                                              .digitsOnly,
-                                          LengthLimitingTextInputFormatter(6)
-                                        ],
-                                        validator: (String? value) {
-                                          if (value == null || value.isEmpty) {
-                                            return " Please enter the pincode";
-                                          }
-                                        },
-                                        decoration: const InputDecoration(
-                                            hintText: "Enter Pin Code"),
-                                        enabled: !_status,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: GroceryAppColors.tela1
+                                                  .withOpacity(0.1),
+                                              blurRadius: 10,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: TextFormField(
+                                          controller: pincodeController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                            LengthLimitingTextInputFormatter(6)
+                                          ],
+                                          validator: (String? value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return " Please enter the pincode";
+                                            }
+                                            return null;
+                                          },
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: GroceryAppColors.boxColor1,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: "Enter Pin Code",
+                                            hintStyle: TextStyle(
+                                              color: Colors.grey[500],
+                                              fontSize: 16,
+                                            ),
+                                            prefixIcon: Icon(
+                                              Icons.location_on_outlined,
+                                              color: GroceryAppColors.tela1,
+                                              size: 20,
+                                            ),
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 15,
+                                            ),
+                                          ),
+                                          enabled: !_status,
+                                        ),
                                       ),
                                     ),
                                     flex: 2,
                                   ),
                                   Flexible(
-                                    child: TextFormField(
-                                      controller: stateController,
-                                      validator: (String? value) {
-                                        if (value == null || value.isEmpty) {
-                                          return " Please enter the state";
-                                        }
-                                      },
-                                      decoration: const InputDecoration(
-                                          hintText: "Enter State"),
-                                      enabled: !_status,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: GroceryAppColors.tela1
+                                                .withOpacity(0.1),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: TextFormField(
+                                        controller: stateController,
+                                        validator: (String? value) {
+                                          if (value == null || value.isEmpty) {
+                                            return " Please enter the state";
+                                          }
+                                          return null;
+                                        },
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: GroceryAppColors.boxColor1,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        decoration: InputDecoration(
+                                          hintText: "Enter State",
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey[500],
+                                            fontSize: 16,
+                                          ),
+                                          prefixIcon: Icon(
+                                            Icons.map_outlined,
+                                            color: GroceryAppColors.tela1,
+                                            size: 20,
+                                          ),
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 15,
+                                          ),
+                                        ),
+                                        enabled: !_status,
+                                      ),
                                     ),
                                     flex: 2,
                                   ),
@@ -562,6 +736,7 @@ class _HomePageState extends State<EditProfilePage> {
                                         if (value == null || value.isEmpty) {
                                           return " Please enter the city";
                                         }
+                                        return null;
                                       },
                                       decoration: const InputDecoration(
                                           hintText: "Enter City"),
@@ -622,32 +797,57 @@ class _HomePageState extends State<EditProfilePage> {
                             padding: EdgeInsets.only(
                                 left: 25.0, right: 25.0, top: 15.0),
                             child: Container(
-                                child: new TextFormField(
-                                    maxLines: 8,
-                                    keyboardType: TextInputType
-                                        .text, // Use mobile input type for emails.
-                                    controller: resignofcause,
-                                    validator: (String? value) {
-                                      //print("Length${value.length}");
-                                      if (value == null ||
-                                          value.isEmpty && value.length > 10) {
-                                        return " Please enter the  address";
-                                      }
-                                    },
-                                    decoration: new InputDecoration(
-                                      hintText: 'Address',
-                                      labelText: 'Enter the address',
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.black54, width: 3.0),
-                                      ),
-
-//                                      icon: new Icon(Icons.queue_play_next),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.black54, width: 3.0),
-                                      ),
-                                    ))),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        GroceryAppColors.tela1.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: TextFormField(
+                                maxLines: 8,
+                                keyboardType: TextInputType.text,
+                                controller: resignofcause,
+                                validator: (String? value) {
+                                  if (value == null ||
+                                      value.isEmpty && value.length > 10) {
+                                    return " Please enter the  address";
+                                  }
+                                  return null;
+                                },
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: GroceryAppColors.boxColor1,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: 'Address',
+                                  labelText: 'Enter the address',
+                                  labelStyle: TextStyle(
+                                    color: GroceryAppColors.tela1,
+                                  ),
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey[500],
+                                    fontSize: 16,
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.home_outlined,
+                                    color: GroceryAppColors.tela1,
+                                    size: 20,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
 
                           _getActionButtons(),
@@ -686,7 +886,7 @@ class _HomePageState extends State<EditProfilePage> {
                 style: ElevatedButton.styleFrom(
                   shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(20.0)),
-                  backgroundColor: Colors.green,
+                  backgroundColor: GroceryAppColors.tela,
                   textStyle: TextStyle(
                     color: Colors.white,
                   ),
@@ -773,6 +973,13 @@ class _HomePageState extends State<EditProfilePage> {
   Future _getEmployee() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
+    final mobileValidation =
+        PhoneNumberUtils.validateMobile(mobileController.text);
+    if (mobileValidation != null) {
+      _showLongToast(mobileValidation);
+      return;
+    }
+
     var map = new Map<String, dynamic>();
     map['name'] = nameController.text;
     map['X-Api-Key'] = GroceryAppConstant.API_KEY;
@@ -841,7 +1048,7 @@ class _HomePageState extends State<EditProfilePage> {
               },
               child: CircleAvatar(
                 radius: 70,
-                backgroundColor: Colors.orange,
+                backgroundColor: GroceryAppColors.tela,
                 child: ClipOval(
                   child: new SizedBox(
                     width: 150.0,
@@ -923,41 +1130,37 @@ class _HomePageState extends State<EditProfilePage> {
     imageshow1 = File(data!.path);
 
     String imagevalue1 = (imageshow1).toString();
-    if (imagevalue1 != null) {
-      imagevalue = imagevalue1 != null
-          ? imagevalue1.substring(7, (imagevalue1.lastIndexOf('') - 1)).trim()
-          : imagevalue1;
+    imagevalue = imagevalue1 != null
+        ? imagevalue1.substring(7, (imagevalue1.lastIndexOf('') - 1)).trim()
+        : imagevalue1;
 
 //    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-      setState(() {
-        base64Image = base64Encode(imageshow1!.readAsBytesSync());
-        _image = new File('$imagevalue');
-        print('Image Path $_image');
-        _ImageUpdate();
-      });
-    }
+    setState(() {
+      base64Image = base64Encode(imageshow1!.readAsBytesSync());
+      _image = new File('$imagevalue');
+      print('Image Path $_image');
+      _ImageUpdate();
+    });
   }
 
   getImageC(BuildContext context) async {
     final data = await ImagePicker().pickImage(source: ImageSource.camera);
     imageshow1 = File(data!.path);
     String imagevalue1 = (imageshow1).toString();
-    if (imagevalue1 != null) {
-      imagevalue1.length > 7
-          ? imagevalue =
-              imagevalue1.substring(7, (imagevalue1.lastIndexOf('') - 1)).trim()
-          : imagevalue1;
+    imagevalue1.length > 7
+        ? imagevalue =
+            imagevalue1.substring(7, (imagevalue1.lastIndexOf('') - 1)).trim()
+        : imagevalue1;
 
 //    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-      setState(() {
-        base64Image = base64Encode(imageshow1!.readAsBytesSync());
-        _image = new File('$imagevalue');
-        print('Image Path $_image');
-        _ImageUpdate();
-      });
-    }
+    setState(() {
+      base64Image = base64Encode(imageshow1!.readAsBytesSync());
+      _image = new File('$imagevalue');
+      print('Image Path $_image');
+      _ImageUpdate();
+    });
   }
 
   final picker = ImagePicker();

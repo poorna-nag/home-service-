@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:aladdinmart/grocery/Auth/newMap.dart';
+import 'package:EcoShine24/grocery/Auth/newMap.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:aladdinmart/grocery/General/AppConstant.dart';
-import 'package:aladdinmart/grocery/model/RegisterModel.dart';
+import 'package:EcoShine24/grocery/General/AppConstant.dart';
+import 'package:EcoShine24/grocery/model/RegisterModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 import 'ShowAddress.dart';
+import '../../utils/phone_number_utils.dart';
 
 class AddAddress extends StatefulWidget {
   final String valu;
@@ -79,7 +79,7 @@ class _HomePageState extends State<AddAddress> {
     this.setState(() {
       nameController.text = name ?? "";
       emailController.text = email ?? "";
-      stateController.text = 'Karnatka';
+      stateController.text = 'Karnataka';
       pincodeController.text = pin ?? "";
       mobileController.text = mobile ?? "";
       cityController.text = city ?? "";
@@ -118,377 +118,293 @@ class _HomePageState extends State<AddAddress> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: GroceryAppColors.tela,
-          iconTheme: IconThemeData(
-            color: Colors.white, // <-- SEE HERE
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                GroceryAppColors.tela, // Vibrant blue
+                GroceryAppColors.tela1, // Light blue
+              ],
+            ),
           ),
-          title: Text(
-            "Add Address",
-            style: TextStyle(color: Colors.white),
-          )),
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text(
+          "Add Address",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
       key: profilescaffoldkey,
       body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              GroceryAppColors.bg,
+              Colors.white,
+            ],
+          ),
+        ),
         child: ListView(
           children: <Widget>[
             Column(
               children: <Widget>[
                 Container(
+                  margin: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 15,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                  ),
                   child: Form(
                     key: _formKeyad,
                     child: Padding(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(24),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Row(
-                            children: [
-                              Expanded(
-                                child: RadioListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  value: 1,
-                                  groupValue: selectedRadio,
-                                  title: Text(
-                                    "Home",
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  onChanged: (val) {
-                                    print("Radio $val");
-                                    setSelectRadio(val!);
-                                  },
-                                  activeColor: Colors.red,
-                                     dense: true, // Makes the RadioListTile more compact
-        visualDensity: VisualDensity(horizontal: -4, vertical: -4), 
-                                ),
+                          // Address Type Selection
+                          Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFF1B5E20).withOpacity(0.05),
+                                  Color(0xFF2E7D32).withOpacity(0.03),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ),
-                              Expanded(
-                                child: RadioListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  value: 2,
-                                  groupValue: selectedRadio,
-                                  title: Text(
-                                    "Profile",
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  onChanged: (val) {
-                                    print("Radio $val");
-                                    setSelectRadio(val!);
-                                  },
-                                  activeColor: Colors.red,
-                                     dense: true, // Makes the RadioListTile more compact
-        visualDensity: VisualDensity(horizontal: -4, vertical: -4), 
-                                ),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Color(0xFF1B5E20).withOpacity(0.2),
+                                width: 1,
                               ),
-                              Expanded(
-                                child: RadioListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  value: 3,
-                                  groupValue: selectedRadio,
-                                  title: Text(
-                                    "Others",
-                                    style: TextStyle(fontSize: 12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Address Type',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF1B5E20),
                                   ),
-                                  onChanged: (val) {
-                                    print("Radio $val");
-                                    setSelectRadio(val!);
-                                  },
-                                  activeColor: Colors.red,
-                                  dense:
-                                      true, // Makes the RadioListTile more compact
-                                  visualDensity: VisualDensity(
-                                      horizontal: -4, vertical: -4),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          _status
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: <Widget>[
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Text(
-                                          'Label',
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.bold),
+                                SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: RadioListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        value: 1,
+                                        groupValue: selectedRadio,
+                                        title: Text(
+                                          "Home",
+                                          style: TextStyle(fontSize: 12),
                                         ),
-                                      ],
+                                        onChanged: (val) {
+                                          print("Radio $val");
+                                          setSelectRadio(val!);
+                                        },
+                                        activeColor: Color(0xFF1B5E20),
+                                        dense: true,
+                                        visualDensity: VisualDensity(
+                                            horizontal: -4, vertical: -4),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: RadioListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        value: 2,
+                                        groupValue: selectedRadio,
+                                        title: Text(
+                                          "Office",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        onChanged: (val) {
+                                          print("Radio $val");
+                                          setSelectRadio(val!);
+                                        },
+                                        activeColor: Color(0xFF1B5E20),
+                                        dense: true,
+                                        visualDensity: VisualDensity(
+                                            horizontal: -4, vertical: -4),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: RadioListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        value: 3,
+                                        groupValue: selectedRadio,
+                                        title: Text(
+                                          "Others",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        onChanged: (val) {
+                                          print("Radio $val");
+                                          setSelectRadio(val!);
+                                        },
+                                        activeColor: Color(0xFF1B5E20),
+                                        dense: true,
+                                        visualDensity: VisualDensity(
+                                            horizontal: -4, vertical: -4),
+                                      ),
                                     ),
                                   ],
-                                )
-                              : Row(),
-                          _status ? getLabel() : Row(),
-                          Padding(
-                              padding: EdgeInsets.only(top: 10.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[],
-                              )),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    'Name',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.0),
-                            child: TextFormField(
-                              controller: nameController,
-                              validator: (String? value) {
-                                if (value == null || value.isEmpty) {
-                                  return " Please enter the name";
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(left: 10),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                hintText: "Enter Your Name",
-                              ),
-                            ),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(top: 10.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text(
-                                        'Email Id',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10.0),
-                            child: TextFormField(
-                              controller: emailController,
-                              validator: (String? value) {
-                                if (value == null || value.isEmpty) {
-                                  return " Please enter the email id";
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 10),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  hintText: "Enter Email ID"),
-                            ),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(top: 10.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      child: Text(
-                                        'Mobile No',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      child: Text(
-                                        'State',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                              padding: EdgeInsets.only(top: 10.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(right: 10.0),
-                                      child: TextFormField(
-                                        controller: mobileController,
-                                        keyboardType: TextInputType.number,
-                                        validator: (String? value) {
-                                          if (value == null ||
-                                              value.isEmpty && value == 10) {
-                                            return " Please enter the mobile No";
-                                          }
-                                          return null;
-                                        },
-                                        decoration: InputDecoration(
-                                            contentPadding:
-                                                EdgeInsets.only(left: 10),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            hintText: "Enter Mobile No"),
-                                      ),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                  Flexible(
-                                    child: TextFormField(
-                                      controller: stateController,
-                                      validator: (String? value) {
-                                        if (value == null || value.isEmpty) {
-                                          return " Please enter the state";
-                                        }
-                                        return null;
-                                      },
-                                      decoration: InputDecoration(
-                                          contentPadding:
-                                              EdgeInsets.only(left: 10),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          hintText: "Enter State"),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                              padding: EdgeInsets.only(top: 15.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      child: Text(
-                                        'City',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      child: Text(
-                                        'Pin Code',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                              padding: EdgeInsets.only(top: 10.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(right: 10.0),
-                                      child: TextFormField(
-                                        controller: cityController,
-                                        validator: (String? value) {
-                                          if (value == null || value.isEmpty) {
-                                            return " Please enter the city";
-                                          }
-                                          return null;
-                                        },
-                                        decoration: InputDecoration(
-                                            contentPadding:
-                                                EdgeInsets.only(left: 10),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            hintText: "Enter City"),
-                                      ),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                  Flexible(
-                                    child: TextFormField(
-                                      controller: pincodeController,
-                                      keyboardType: TextInputType.number,
-                                      validator: (String? value) {
-                                        if (value == null || value.isEmpty) {
-                                          return " Please enter the pincode";
-                                        }
-                                        return null;
-                                      },
-                                      decoration: InputDecoration(
-                                          contentPadding:
-                                              EdgeInsets.only(left: 10),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          hintText: "Enter Pincode"),
-                                    ),
-                                    flex: 2,
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Address',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                _getEditIcon(),
                               ],
                             ),
                           ),
+                          SizedBox(height: 20),
+                          _status
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Label',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF1B5E20),
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    getLabel(),
+                                    SizedBox(height: 20),
+                                  ],
+                                )
+                              : SizedBox.shrink(),
+
+                          // Name Field
+                          _buildModernTextField(
+                            label: 'Name',
+                            controller: nameController,
+                            hintText: "Enter Your Name",
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter the name";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 20),
+
+                          // Email Field
+                          _buildModernTextField(
+                            label: 'Email Id',
+                            controller: emailController,
+                            hintText: "Enter Email ID",
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter the email id";
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 20),
+
+                          // Mobile and State Row
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildModernTextField(
+                                  label: 'Mobile No',
+                                  controller: mobileController,
+                                  hintText: "Enter Mobile No",
+                                  keyboardType: TextInputType.number,
+                                  validator: PhoneNumberUtils.validateMobile,
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Expanded(
+                                child: _buildModernTextField(
+                                  label: 'State',
+                                  controller: stateController,
+                                  hintText: "Enter State",
+                                  validator: (String? value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Please enter the state";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+
+                          // City and Pincode Row
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildModernTextField(
+                                  label: 'City',
+                                  controller: cityController,
+                                  hintText: "Enter City",
+                                  validator: (String? value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Please enter the city";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Expanded(
+                                child: _buildModernTextField(
+                                  label: 'Pin Code',
+                                  controller: pincodeController,
+                                  hintText: "Enter Pincode",
+                                  keyboardType: TextInputType.number,
+                                  validator: (String? value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Please enter the pincode";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+
+                          // Address Section
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Address',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1B5E20),
+                                ),
+                              ),
+                              _getEditIcon(),
+                            ],
+                          ),
+                          SizedBox(height: 8),
                           InkWell(
                             onTap: () {
                               Navigator.push(
@@ -509,22 +425,40 @@ class _HomePageState extends State<AddAddress> {
                               validator: (String? value) {
                                 if (value == null ||
                                     value.isEmpty && value.length > 10) {
-                                  return " Please enter the  address";
+                                  return "Please enter the address";
                                 }
                                 return null;
                               },
                               decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.only(left: 10, top: 20),
+                                contentPadding: EdgeInsets.all(16),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                hintText: 'Address',
-                                labelText: 'Enter the address',
-                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(
-                                      color: Colors.black54, width: 3.0),
+                                    color: Color(0xFF1B5E20).withOpacity(0.3),
+                                    width: 1,
+                                  ),
                                 ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Color(0xFF1B5E20).withOpacity(0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Color(0xFF1B5E20),
+                                    width: 2,
+                                  ),
+                                ),
+                                hintText: 'Enter the full address',
+                                hintStyle: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontSize: 14,
+                                ),
+                                filled: true,
+                                fillColor: Color(0xFF1B5E20).withOpacity(0.02),
                               ),
                             ),
                           ),
@@ -551,23 +485,41 @@ class _HomePageState extends State<AddAddress> {
 
   Widget _getActionButtons() {
     return Padding(
-      padding: const EdgeInsets.only(top: 50.0),
-      child: SizedBox(
-        height: 45,
+      padding: const EdgeInsets.only(top: 32.0),
+      child: Container(
         width: MediaQuery.of(context).size.width,
+        height: 50,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [GroceryAppColors.tela, GroceryAppColors.tela1],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: GroceryAppColors.tela.withOpacity(0.3),
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            textStyle: TextStyle(
-              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
           child: Text(
-            "Save",
+            "Save Address",
             style: TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
           ),
           onPressed: () {
             setState(() {
@@ -575,7 +527,7 @@ class _HomePageState extends State<AddAddress> {
                 if (pincodeController.text.length == 6) {
                   _AddAddress();
                 } else {
-                  showLongToast("Enter the valide pin");
+                  showLongToast("Enter the valid pin");
                 }
               }
             });
@@ -618,24 +570,30 @@ class _HomePageState extends State<AddAddress> {
   Future _AddAddress() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? userid = pref.getString("user_id");
-    
+
     // Validate required fields
     if (user_id == null || user_id!.isEmpty) {
       showLongToast("User not logged in. Please login again.");
       return;
     }
-    
-    if (nameController.text.isEmpty || 
-        mobileController.text.isEmpty || 
-        emailController.text.isEmpty || 
-        address1.text.isEmpty || 
-        cityController.text.isEmpty || 
-        stateController.text.isEmpty || 
+
+    if (nameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        address1.text.isEmpty ||
+        cityController.text.isEmpty ||
+        stateController.text.isEmpty ||
         pincodeController.text.isEmpty) {
       showLongToast("Please fill all required fields");
       return;
     }
-    
+
+    final mobileValidation =
+        PhoneNumberUtils.validateMobile(mobileController.text);
+    if (mobileValidation != null) {
+      showLongToast(mobileValidation);
+      return;
+    }
+
     print('Shop ID: ${GroceryAppConstant.Shop_id}');
     print('API Key: ${GroceryAppConstant.API_KEY}');
     print('User ID: $userid');
@@ -656,7 +614,7 @@ class _HomePageState extends State<AddAddress> {
     map['mobile'] = mobileController.text;
     map['email'] = emailController.text;
     map['address1'] = address1.text;
-    map['address2'] = address2.text != null ? address2.text : "";
+    map['address2'] = address2.text.isNotEmpty ? address2.text : "";
     map['city'] = cityController.text;
     map['state'] = stateController.text;
     map['pincode'] = pincodeController.text;
@@ -672,7 +630,8 @@ class _HomePageState extends State<AddAddress> {
     //         : pre!.getString("lng")
 
     // Validate latitude and longitude
-    if (GroceryAppConstant.latitude == 0.0 || GroceryAppConstant.longitude == 0.0) {
+    if (GroceryAppConstant.latitude == 0.0 ||
+        GroceryAppConstant.longitude == 0.0) {
       showLongToast("Please enable location and try again");
       return;
     }
@@ -692,7 +651,7 @@ class _HomePageState extends State<AddAddress> {
       final response = await http.post(Uri.parse(link), body: map);
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
-      
+
       if (response.statusCode == 200) {
         final jsonBody = json.decode(response.body);
         OtpModal user = OtpModal.fromJson(jsonBody);
@@ -719,58 +678,183 @@ class _HomePageState extends State<AddAddress> {
       }
     } catch (e) {
       print('Exception in _AddAddress: $e');
-      showLongToast("Network error: Please check your connection and try again");
+      showLongToast(
+          "Network error: Please check your connection and try again");
     }
   }
 
   Widget getLabel() {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0),
-      child: TextFormField(
-        controller: labelController,
-        validator: (String? value) {
-          if (value == null || value.isEmpty) {
-            return " Please enter the label";
-          }
-          return null;
-        },
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: 10),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+    return TextFormField(
+      controller: labelController,
+      validator: (String? value) {
+        if (value == null || value.isEmpty) {
+          return "Please enter the label";
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: GroceryAppColors.tela.withOpacity(0.3),
+            width: 1,
           ),
-          hintText: "Enter Label",
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: GroceryAppColors.tela.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: GroceryAppColors.tela,
+            width: 2,
+          ),
+        ),
+        hintText: "Enter Label",
+        hintStyle: TextStyle(
+          color: GroceryAppColors.tela1,
+          fontSize: 14,
+        ),
+        filled: true,
+        fillColor: GroceryAppColors.tela.withOpacity(0.02),
       ),
     );
   }
 
   Widget _getEditIcon() {
-    return TextButton.icon(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MapClass(
-                    textEditingController: address1,
-                    cityController: cityController,
-                    stateController: stateController,
-                    pincodeController: pincodeController,
-                  )),
-        );
-      },
-      label: Text(
-        'CURRENT LOCATION',
-        style: TextStyle(color: Colors.black),
-      ),
-      icon: RotatedBox(
-        quarterTurns: 45,
-        child: Icon(
-          Icons.navigation_rounded,
-          color: GroceryAppColors.tela,
-          size: 25.0,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            GroceryAppColors.tela.withOpacity(0.1),
+            GroceryAppColors.tela1.withOpacity(0.05)
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: GroceryAppColors.tela.withOpacity(0.3),
+          width: 1,
         ),
       ),
+      child: TextButton.icon(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MapClass(
+                      textEditingController: address1,
+                      cityController: cityController,
+                      stateController: stateController,
+                      pincodeController: pincodeController,
+                    )),
+          );
+        },
+        label: Text(
+          'CURRENT LOCATION',
+          style: TextStyle(
+            color: GroceryAppColors.tela,
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+          ),
+        ),
+        icon: RotatedBox(
+          quarterTurns: 45,
+          child: Icon(
+            Icons.navigation_rounded,
+            color: GroceryAppColors.tela,
+            size: 18,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Helper method to build modern text fields
+  Widget _buildModernTextField({
+    required String label,
+    required TextEditingController controller,
+    required String hintText,
+    TextInputType? keyboardType,
+    String? Function(String?)? validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: GroceryAppColors.tela,
+          ),
+        ),
+        SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          validator: validator,
+          inputFormatters: keyboardType == TextInputType.number
+              ? (label == 'Mobile No'
+                  ? PhoneNumberUtils.inputFormatters
+                  : [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(6),
+                    ])
+              : null,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.all(16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: GroceryAppColors.tela.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: GroceryAppColors.tela.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: GroceryAppColors.tela,
+                width: 2,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: Colors.red,
+                width: 1,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: Colors.red,
+                width: 2,
+              ),
+            ),
+            hintText: hintText,
+            hintStyle: TextStyle(
+              color: GroceryAppColors.tela1,
+              fontSize: 14,
+            ),
+            filled: true,
+            fillColor: GroceryAppColors.tela.withOpacity(0.02),
+          ),
+        ),
+      ],
     );
   }
 }

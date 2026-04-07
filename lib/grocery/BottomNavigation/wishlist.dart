@@ -1,13 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:EcoShine24/constent/app_constent.dart';
 import 'package:EcoShine24/grocery/General/AppConstant.dart';
-import 'package:EcoShine24/grocery/BottomNavigation/grocery_app_home_screen.dart';
-import 'package:EcoShine24/grocery/StyleDecoration/styleDecoration.dart';
 import 'package:EcoShine24/grocery/dbhelper/CarrtDbhelper.dart';
 import 'package:EcoShine24/grocery/screen/ShowAddress.dart';
 import 'package:EcoShine24/grocery/General/Home.dart';
@@ -16,8 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class WishList extends StatefulWidget {
   final bool? check;
+  final VoidCallback? onStartShopping;
 
-  const WishList({Key? key, this.check}) : super(key: key);
+  const WishList({Key? key, this.check, this.onStartShopping})
+      : super(key: key);
   @override
   WishlistState createState() => WishlistState();
 }
@@ -283,10 +281,14 @@ class WishlistState extends State<WishList> with TickerProviderStateMixin {
                 ),
                 child: ElevatedButton.icon(
                   onPressed: () {
+                    if (widget.onStartShopping != null) {
+                      widget.onStartShopping!();
+                      return;
+                    }
+
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => GroceryAppHomeScreen()),
+                      MaterialPageRoute(builder: (context) => GroceryApp()),
                       (route) => false,
                     );
                   },

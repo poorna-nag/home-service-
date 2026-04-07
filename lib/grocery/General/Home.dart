@@ -12,7 +12,6 @@ import 'package:EcoShine24/grocery/dbhelper/CarrtDbhelper.dart';
 import 'package:EcoShine24/grocery/dbhelper/database_helper.dart';
 import 'package:EcoShine24/grocery/screen/custom_order.dart';
 import 'package:EcoShine24/grocery/screen/myorder.dart';
-import 'package:EcoShine24/grocery/widgets/category_selection_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'drawer.dart';
 
@@ -207,7 +206,6 @@ class GroceryAppState extends State<GroceryApp> {
       );
   final Cgategorywise _categories = Cgategorywise("", false);
   //final My_Cat _categories = My_Cat();
-  final WishList _cartitem = WishList();
   final ProfileView _profilePage = ProfileView();
   final CustomOrder _customOrder = CustomOrder();
   final TrackOrder _myBookings = TrackOrder();
@@ -227,7 +225,15 @@ class GroceryAppState extends State<GroceryApp> {
         break;
       case 2:
         _onItemTapped(2);
-        return _cartitem;
+        return WishList(
+          onStartShopping: () {
+            if (!mounted) return;
+            setState(() {
+              _selectedIndex = 0;
+              _showPage = _screen;
+            });
+          },
+        );
         break;
       case 3:
         _onItemTapped(3);
